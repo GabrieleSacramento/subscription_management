@@ -1,3 +1,15 @@
 {
-    "manageYourSubscriptions": "Gerencie suas assinaturas"
+    "manageYour": "Gerencie suas",
+    "manageYourSubscriptionWhitoutComplications": "Gerenciamento de assinaturas sem complicações.",
+    "amountSpentThisMonth": "Valor gasto esse mês",
+    "subscriptions": " assinaturas",
+    "enter": "Entrar",
+    "name": "Nome",
+    "email": "Email",
+    "password": "Senha",
+    "confirmPassword": "Confirmar senha",
+    "invalidEmail": "Email inválido",
+    "passwordMustBeAtLeast": "A senha deve conter no mínimo 8 caracteres",
+    "thisFieldIsRequired": "Este campo precisa ser preenchido", 
+    "wasNotPossibleToCreateAnAccount": "Não foi possivel realizar o cadastro, verifique seus dados e tente novamente"
 }

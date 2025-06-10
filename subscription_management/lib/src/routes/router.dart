@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:subscription_management/src/modules/login/presentation/pages/select_login_method_page.dart';
+import 'package:subscription_management/src/modules/login/presentation/pages/signup_page.dart';
 import 'package:subscription_management/src/modules/splash_screen/splash_screen.dart';
 
 part 'router.gr.dart';
@@ -10,5 +12,7 @@ class SubscriptionManagerRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: SplashScreenRoute.page, initial: true),
+    AutoRoute(page: SelectLoginMethodRoute.page),
+    AutoRoute(page: SignupPageRoute.page),
   ];
 }

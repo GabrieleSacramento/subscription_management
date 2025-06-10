@@ -1,5 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:subscription_management/src/modules/login/domain/entities/repositories/user_authentication_repository.dart';
+import 'package:subscription_management/src/modules/login/domain/entities/use_cases/user_authentication_use_case.dart';
+import 'package:subscription_management/src/modules/login/external/user_authentication_datasource_impl.dart';
+import 'package:subscription_management/src/modules/login/infra/datasource/user_authentication_datasource.dart';
+import 'package:subscription_management/src/modules/login/infra/repositories/user_authentication_repository_impl.dart';
+import 'package:subscription_management/src/modules/login/infra/use_cases/user_authentication_use_case_impl.dart';
+import 'package:subscription_management/src/modules/login/presentation/cubit/user_authentication_cubit.dart';
 
 Dio dio = Dio();
 
@@ -14,17 +21,35 @@ Future<void> registerDependencies() async {
 }
 
 void setupDatasources() {
-  // Register your data sources here
+  setup.registerFactory<UserAuthenticationDatasource>(
+    () => UserAuthenticationDatasourceImpl(),
+  );
 }
+
 void setupRepositories() {
-  // Register your repositories here
+  setup.registerFactory<UserAuthenticationRepository>(
+    () => UserAuthenticationRepositoryImpl(
+      datasource: GetIt.I.get<UserAuthenticationDatasource>(),
+    ),
+  );
 }
+
 void setupUseCases() {
-  // Register your use cases here
+  setup.registerFactory<UserAuthenticationUseCase>(
+    () => UserAuthenticationUseCaseImpl(
+      repository: GetIt.I.get<UserAuthenticationRepository>(),
+    ),
+  );
 }
+
 void setupCubits() {
-  // Register your cubits here
+  setup.registerFactory<UserAuthenticationCubit>(
+    () => UserAuthenticationCubit(
+      userAuthenticationUseCase: GetIt.I.get<UserAuthenticationUseCase>(),
+    ),
+  );
 }
+
 void setupEntities() {
   // Register your entities here
 }

@@ -19,14 +19,14 @@ void main() async {
   buffer.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND');
   buffer.writeln('// ignore_for_file: constant_identifier_names');
   buffer.writeln('');
-  buffer.writeln('class AppStrings {');
+  buffer.writeln('class SubscriptionsManagementStrings {');
   buffer.writeln(
-    '  AppStrings._(); // Construtor privado para evitar instâncias',
+    '  SubscriptionsManagementStrings(); // Construtor privado para evitar instâncias',
   );
   buffer.writeln('');
 
   strings.forEach((key, value) {
-    buffer.writeln('  static const String $key = \'$value\';');
+    buffer.writeln('  final String $key = \'$value\';');
   });
 
   buffer.writeln('}');
