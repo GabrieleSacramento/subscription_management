@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:subscription_management/src/modules/login/presentation/cubit/user_authentication_cubit.dart';
 import 'package:subscription_management/src/routes/router.dart';
 
 @RoutePage(name: 'SplashScreenRoute')
@@ -14,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  final checkAuthentication = GetIt.I.get<UserAuthenticationCubit>();
 
   @override
   void initState() {
@@ -33,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     Future.delayed(const Duration(seconds: 1), () {
       _controller.forward().then((_) {
-        _navigateToSelectLoginMethodPage();
+        checkAuthentication.checkAuthentication();
       });
     });
   }
@@ -48,20 +52,38 @@ class _SplashScreenState extends State<SplashScreen>
     context.pushRoute(const SelectLoginMethodRoute());
   }
 
+  _navigateToHomePage() {
+    context.pushRoute(HomePageRoute());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(228, 228, 237, 1),
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) {
-            return Transform.translate(
-              offset: Offset(0, 200 * (1 - _animation.value)),
-              child: child,
-            );
+    return BlocProvider(
+      create: (context) => checkAuthentication,
+      child: Scaffold(
+        backgroundColor: const Color.fromRGBO(228, 228, 237, 1),
+        body: BlocListener<UserAuthenticationCubit, UserAuthenticationState>(
+          listener: (context, state) {
+            if (state.isSuccess) {
+              _navigateToHomePage();
+            } else if (state.isFailure) {
+              _navigateToSelectLoginMethodPage();
+            }
           },
-          child: Image.asset('assets/images/subscription_management_logo.png'),
+          child: Center(
+            child: AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, 200 * (1 - _animation.value)),
+                  child: child,
+                );
+              },
+              child: Image.asset(
+                'assets/images/subscription_management_logo.png',
+              ),
+            ),
+          ),
         ),
       ),
     );

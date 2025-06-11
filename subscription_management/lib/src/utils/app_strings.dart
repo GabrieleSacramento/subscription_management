@@ -17,4 +17,6 @@ class SubscriptionsManagementStrings {
   final String passwordMustBeAtLeast = 'A senha deve conter no mínimo 8 caracteres';
   final String thisFieldIsRequired = 'Este campo precisa ser preenchido';
   final String wasNotPossibleToCreateAnAccount = 'Não foi possivel realizar o cadastro, verifique seus dados e tente novamente';
+  final String clickToAddSubscription = 'Clique para adicionar uma assinatura';
+  final String welcome = 'Bem vindo';
 }

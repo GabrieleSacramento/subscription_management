@@ -11,6 +11,42 @@
 part of 'router.dart';
 
 /// generated route for
+/// [HomePage]
+class HomePageRoute extends PageRouteInfo<HomePageRouteArgs> {
+  HomePageRoute({Key? key, String? userName, List<PageRouteInfo>? children})
+    : super(
+        HomePageRoute.name,
+        args: HomePageRouteArgs(key: key, userName: userName),
+        initialChildren: children,
+      );
+
+  static const String name = 'HomePageRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<HomePageRouteArgs>(
+        orElse: () => const HomePageRouteArgs(),
+      );
+      return HomePage(key: args.key, userName: args.userName);
+    },
+  );
+}
+
+class HomePageRouteArgs {
+  const HomePageRouteArgs({this.key, this.userName});
+
+  final Key? key;
+
+  final String? userName;
+
+  @override
+  String toString() {
+    return 'HomePageRouteArgs{key: $key, userName: $userName}';
+  }
+}
+
+/// generated route for
 /// [SelectLoginMethodPage]
 class SelectLoginMethodRoute extends PageRouteInfo<void> {
   const SelectLoginMethodRoute({List<PageRouteInfo>? children})

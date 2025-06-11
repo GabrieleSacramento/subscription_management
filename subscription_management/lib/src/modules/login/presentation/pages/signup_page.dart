@@ -11,6 +11,7 @@ import 'package:subscription_management/src/modules/shared/widgets/custom_app_ba
 import 'package:subscription_management/src/modules/shared/widgets/custom_button.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_form.dart';
 import 'package:subscription_management/src/modules/shared/widgets/loading_button.dart';
+import 'package:subscription_management/src/routes/router.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
 
 @RoutePage(name: 'SignupPageRoute')
@@ -30,6 +31,9 @@ class _SignupPageState extends State<SignupPage> {
   final _signupCubit = GetIt.I.get<UserAuthenticationCubit>();
 
   bool isPasswordVisible = false;
+  _navigateToHomePage(String? userName) {
+    context.pushRoute(HomePageRoute(userName: null));
+  }
 
   @override
   void dispose() {
@@ -156,8 +160,9 @@ class _SignupPageState extends State<SignupPage> {
                           final userName =
                               prefs.getString('userName_$email') ??
                               'Usuário não identificado';
+
+                          _navigateToHomePage(userName);
                           clearForm();
-                          showActionSnackBarSuccess(context);
                         }
                       },
 
@@ -201,21 +206,6 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
       backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void showActionSnackBarSuccess(BuildContext context) {
-    const snackBar = SnackBar(
-      content: Text(
-        "Conta criada com sucesso!",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: Color.fromARGB(255, 91, 245, 168),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

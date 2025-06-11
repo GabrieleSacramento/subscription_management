@@ -93,7 +93,7 @@ class CustomForm extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          style: const TextStyle(color: const Color.fromRGBO(37, 41, 84, 1)),
+          style: const TextStyle(color: Color.fromRGBO(37, 41, 84, 1)),
         ),
       ],
     );

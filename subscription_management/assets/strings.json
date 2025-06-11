@@ -10,6 +10,8 @@
     "confirmPassword": "Confirmar senha",
     "invalidEmail": "Email inválido",
     "passwordMustBeAtLeast": "A senha deve conter no mínimo 8 caracteres",
-    "thisFieldIsRequired": "Este campo precisa ser preenchido", 
-    "wasNotPossibleToCreateAnAccount": "Não foi possivel realizar o cadastro, verifique seus dados e tente novamente"
+    "thisFieldIsRequired": "Este campo precisa ser preenchido",
+    "wasNotPossibleToCreateAnAccount": "Não foi possivel realizar o cadastro, verifique seus dados e tente novamente",
+    "clickToAddSubscription": "Clique para adicionar uma assinatura",
+    "welcome": "Bem vindo"
 }
