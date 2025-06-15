@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/home_bottom_bar.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/home_empty_body_widget.dart';
+import 'package:subscription_management/src/modules/home/presentation/widgets/home_filled_body_widget.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
 
 @RoutePage(name: 'HomePageRoute')
@@ -14,22 +15,28 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          userName ?? strings.welcome,
-          style: TextStyle(
-            fontSize: 20.sp,
-            color: const Color.fromRGBO(111, 86, 221, 1),
-          ),
-        ),
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-        elevation: 0,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          titleSpacing: 24.w,
+          title: Padding(
+            padding: EdgeInsets.only(top: 24.h),
+            child: Text(
+              userName ?? strings.welcome,
+              style: TextStyle(
+                fontSize: 20.sp,
+                color: const Color.fromRGBO(111, 86, 221, 1),
+              ),
+            ),
+          ),
+          backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
+          elevation: 0,
+        ),
+        body: HomeFilledBodyWidget(),
+        bottomNavigationBar: const HomeBottomBar(),
       ),
-      body: HomeEmptyBodyWidget(),
-      bottomNavigationBar: const HomeBottomBar(),
     );
   }
 }

@@ -14,7 +14,7 @@ class ValueSpentInformationCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
       width: double.infinity,
-      height: 120.h,
+      height: 110.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
@@ -27,10 +27,10 @@ class ValueSpentInformationCard extends StatelessWidget {
         children: [
           CircleAvatar(
             backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
-            radius: 24.sp,
+            radius: 20.sp,
             child: Text(
               'R\$',
-              style: TextStyle(fontSize: 24.sp, color: Colors.white),
+              style: TextStyle(fontSize: 20.sp, color: Colors.white),
             ),
           ),
           Padding(
@@ -41,18 +41,18 @@ class ValueSpentInformationCard extends StatelessWidget {
                   : CurrencyFormatter.format(127.90),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 24.sp,
+                fontSize: 20.sp,
                 color: const Color.fromRGBO(111, 86, 221, 1),
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 8.h),
+            padding: EdgeInsets.only(top: 4.h),
             child: Text(
               strings.amountSpentThisMonth,
               style: TextStyle(
                 fontWeight: FontWeight.normal,
-                fontSize: 16.sp,
+                fontSize: 14.sp,
                 color: const Color.fromRGBO(77, 77, 97, 1),
               ),
             ),

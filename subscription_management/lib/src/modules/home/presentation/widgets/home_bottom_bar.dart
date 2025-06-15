@@ -7,7 +7,8 @@ class HomeBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      color: const Color.fromRGBO(111, 86, 221, 1),
+      elevation: 8.0,
+      color: const Color.fromRGBO(77, 77, 97, 1),
       child: Padding(
         padding: EdgeInsets.all(12.sp),
         child: Row(
@@ -17,20 +18,24 @@ class HomeBottomBar extends StatelessWidget {
               onTap: () {},
               child: Icon(
                 Icons.home_outlined,
-                color: Colors.white,
-                size: 24.sp,
+                color: const Color.fromRGBO(243, 243, 243, 1),
+                size: 28.sp,
               ),
             ),
             GestureDetector(
               onTap: () {},
-              child: Icon(Icons.add_circle, color: Colors.white, size: 48.sp),
+              child: Icon(
+                Icons.add_circle,
+                color: const Color.fromRGBO(243, 243, 243, 1),
+                size: 36.sp,
+              ),
             ),
             GestureDetector(
               onTap: () {},
               child: Icon(
                 Icons.settings_outlined,
-                color: Colors.white,
-                size: 24.sp,
+                color: const Color.fromRGBO(243, 243, 243, 1),
+                size: 28.sp,
               ),
             ),
           ],

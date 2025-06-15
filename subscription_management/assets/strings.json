@@ -13,5 +13,6 @@
     "thisFieldIsRequired": "Este campo precisa ser preenchido",
     "wasNotPossibleToCreateAnAccount": "Não foi possivel realizar o cadastro, verifique seus dados e tente novamente",
     "clickToAddSubscription": "Clique para adicionar uma assinatura",
-    "welcome": "Bem vindo"
+    "welcome": "Bem vindo",
+    "mySubscriptions": "Minhas assinaturas"
 }

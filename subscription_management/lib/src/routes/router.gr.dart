@@ -57,7 +57,7 @@ class SelectLoginMethodRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const SelectLoginMethodPage();
+      return SelectLoginMethodPage();
     },
   );
 }

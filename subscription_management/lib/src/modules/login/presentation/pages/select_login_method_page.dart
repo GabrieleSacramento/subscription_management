@@ -8,11 +8,11 @@ import 'package:subscription_management/src/utils/app_strings.dart';
 
 @RoutePage(name: 'SelectLoginMethodRoute')
 class SelectLoginMethodPage extends StatelessWidget {
-  const SelectLoginMethodPage({super.key});
+  final strings = SubscriptionsManagementStrings();
+  SelectLoginMethodPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final strings = SubscriptionsManagementStrings();
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color.fromRGBO(228, 228, 237, 1),

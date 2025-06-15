@@ -19,4 +19,5 @@ class SubscriptionsManagementStrings {
   final String wasNotPossibleToCreateAnAccount = 'Não foi possivel realizar o cadastro, verifique seus dados e tente novamente';
   final String clickToAddSubscription = 'Clique para adicionar uma assinatura';
   final String welcome = 'Bem vindo';
+  final String mySubscriptions = 'Minhas assinaturas';
 }
