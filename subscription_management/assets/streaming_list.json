@@ -1,0 +1,67 @@
+[
+    {
+        "streamingId": "1",
+        "streamingName": "Netflix",
+        "streamingImage": "assets/logos/netflix.png"
+    },
+    {
+        "streamingId": "2",
+        "streamingName": "Spotify",
+        "streamingImage": "assets/logos/spotify.png"
+    },
+    {
+        "streamingId": "3",
+        "streamingName": "Disney+",
+        "streamingImage": "assets/logos/disney.png"
+    },
+    {
+        "streamingId": "4",
+        "streamingName": "Amazon Prime",
+        "streamingImage": "assets/logos/prime.png"
+    },
+    {
+        "streamingId": "5",
+        "streamingName": "Youtube",
+        "streamingImage": "assets/logos/youtube.png"
+    },
+    {
+        "streamingId": "2",
+        "streamingName": "Spotify",
+        "streamingImage": "assets/logos/spotify.png"
+    },
+    {
+        "streamingId": "3",
+        "streamingName": "Disney+",
+        "streamingImage": "assets/logos/disney.png"
+    },
+    {
+        "streamingId": "4",
+        "streamingName": "Amazon Prime",
+        "streamingImage": "assets/logos/prime.png"
+    },
+    {
+        "streamingId": "5",
+        "streamingName": "Youtube",
+        "streamingImage": "assets/logos/youtube.png"
+    },
+    {
+        "streamingId": "2",
+        "streamingName": "Spotify",
+        "streamingImage": "assets/logos/spotify.png"
+    },
+    {
+        "streamingId": "3",
+        "streamingName": "Disney+",
+        "streamingImage": "assets/logos/disney.png"
+    },
+    {
+        "streamingId": "4",
+        "streamingName": "Amazon Prime",
+        "streamingImage": "assets/logos/prime.png"
+    },
+    {
+        "streamingId": "5",
+        "streamingName": "Youtube",
+        "streamingImage": "assets/logos/youtube.png"
+    }
+]

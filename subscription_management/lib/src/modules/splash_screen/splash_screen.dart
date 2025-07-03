@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   _navigateToSelectLoginMethodPage() {
-    context.pushRoute(const SelectLoginMethodRoute());
+    context.pushRoute(SelectLoginMethodRoute());
   }
 
   _navigateToHomePage() {

@@ -11,6 +11,52 @@
 part of 'router.dart';
 
 /// generated route for
+/// [AddNewStreamingPage]
+class AddNewStreamingPageRoute
+    extends PageRouteInfo<AddNewStreamingPageRouteArgs> {
+  AddNewStreamingPageRoute({
+    Key? key,
+    Widget? streamingImage,
+    List<PageRouteInfo>? children,
+  }) : super(
+         AddNewStreamingPageRoute.name,
+         args: AddNewStreamingPageRouteArgs(
+           key: key,
+           streamingImage: streamingImage,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'AddNewStreamingPageRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AddNewStreamingPageRouteArgs>(
+        orElse: () => const AddNewStreamingPageRouteArgs(),
+      );
+      return AddNewStreamingPage(
+        key: args.key,
+        streamingImage: args.streamingImage,
+      );
+    },
+  );
+}
+
+class AddNewStreamingPageRouteArgs {
+  const AddNewStreamingPageRouteArgs({this.key, this.streamingImage});
+
+  final Key? key;
+
+  final Widget? streamingImage;
+
+  @override
+  String toString() {
+    return 'AddNewStreamingPageRouteArgs{key: $key, streamingImage: $streamingImage}';
+  }
+}
+
+/// generated route for
 /// [HomePage]
 class HomePageRoute extends PageRouteInfo<HomePageRouteArgs> {
   HomePageRoute({Key? key, String? userName, List<PageRouteInfo>? children})
@@ -48,16 +94,50 @@ class HomePageRouteArgs {
 
 /// generated route for
 /// [SelectLoginMethodPage]
-class SelectLoginMethodRoute extends PageRouteInfo<void> {
-  const SelectLoginMethodRoute({List<PageRouteInfo>? children})
-    : super(SelectLoginMethodRoute.name, initialChildren: children);
+class SelectLoginMethodRoute extends PageRouteInfo<SelectLoginMethodRouteArgs> {
+  SelectLoginMethodRoute({Key? key, List<PageRouteInfo>? children})
+    : super(
+        SelectLoginMethodRoute.name,
+        args: SelectLoginMethodRouteArgs(key: key),
+        initialChildren: children,
+      );
 
   static const String name = 'SelectLoginMethodRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return SelectLoginMethodPage();
+      final args = data.argsAs<SelectLoginMethodRouteArgs>(
+        orElse: () => const SelectLoginMethodRouteArgs(),
+      );
+      return SelectLoginMethodPage(key: args.key);
+    },
+  );
+}
+
+class SelectLoginMethodRouteArgs {
+  const SelectLoginMethodRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'SelectLoginMethodRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [SelectStreamingPage]
+class SelectStreamingPageRoute extends PageRouteInfo<void> {
+  const SelectStreamingPageRoute({List<PageRouteInfo>? children})
+    : super(SelectStreamingPageRoute.name, initialChildren: children);
+
+  static const String name = 'SelectStreamingPageRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SelectStreamingPage();
     },
   );
 }

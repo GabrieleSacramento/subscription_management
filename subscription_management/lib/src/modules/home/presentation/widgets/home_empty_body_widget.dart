@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:subscription_management/src/routes/router.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
 
 class HomeEmptyBodyWidget extends StatelessWidget {
@@ -9,8 +11,10 @@ class HomeEmptyBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
+    return GestureDetector(
+      onTap: () {
+        context.pushRoute(const SelectStreamingPageRoute());
+      },
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -18,8 +22,8 @@ class HomeEmptyBodyWidget extends StatelessWidget {
             Image.asset(
               'assets/images/dinheiro.png',
               fit: BoxFit.cover,
-              width: 127.h,
-              height: 127.h,
+              width: 100.h,
+              height: 100.h,
             ),
             Padding(
               padding: EdgeInsets.only(top: 16.h),

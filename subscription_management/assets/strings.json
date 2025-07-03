@@ -14,5 +14,22 @@
     "wasNotPossibleToCreateAnAccount": "Não foi possivel realizar o cadastro, verifique seus dados e tente novamente",
     "clickToAddSubscription": "Clique para adicionar uma assinatura",
     "welcome": "Bem vindo",
-    "mySubscriptions": "Minhas assinaturas"
+    "mySubscriptions": "Minhas assinaturas",
+    "addSubscription": "Adicionar assinatura",
+    "searchStreaming": "Procurar assinatura",
+    "costumizeYourSubscription": "Personalize sua assinatura",
+    "value": "Valor",
+    "startsAt": "Começou em",
+    "renewAt": "Renova em",
+    "paymentMethod": "Método de pagamento",
+    "rememberMe": "Me lembrar em:",
+    "threeDays": "3 dias",
+    "sevenDays": "7 dias",
+    "fourteenDays": "14 dias",
+    "thirtyDays": "30 dias",
+    "debitCard": "Débito",
+    "creditCard": "Crédito",
+    "pix": "Pix",
+    "bankSlip": "Boleto",
+    "cancelSubscription": "Cancelar assinatura"
 }

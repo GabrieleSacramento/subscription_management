@@ -3,21 +3,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MySubscriptionInfoWidget extends StatelessWidget {
   final String streamingServiceName;
+  final Widget streamingServiceImage;
+
   final String? renewalDate;
   final num? subscriptionPrice;
   final bool seeDetails;
+  final Function() onTap;
   const MySubscriptionInfoWidget({
     super.key,
     required this.streamingServiceName,
     this.renewalDate,
     this.subscriptionPrice,
     this.seeDetails = false,
+    required this.onTap,
+    required this.streamingServiceImage,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(top: 16.h),
         width: double.infinity,
@@ -38,6 +43,7 @@ class MySubscriptionInfoWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 16.w),
                   child: Container(
+                    padding: EdgeInsets.all(2.w),
                     decoration: BoxDecoration(
                       color: const Color.fromRGBO(0, 0, 0, .06),
                       border: Border.all(
@@ -48,6 +54,7 @@ class MySubscriptionInfoWidget extends StatelessWidget {
                     ),
                     width: 32.w,
                     height: 32.h,
+                    child: streamingServiceImage,
                   ),
                 ),
                 Column(

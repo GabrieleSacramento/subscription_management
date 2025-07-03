@@ -20,4 +20,21 @@ class SubscriptionsManagementStrings {
   final String clickToAddSubscription = 'Clique para adicionar uma assinatura';
   final String welcome = 'Bem vindo';
   final String mySubscriptions = 'Minhas assinaturas';
+  final String addSubscription = 'Adicionar assinatura';
+  final String searchStreaming = 'Procurar assinatura';
+  final String costumizeYourSubscription = 'Personalize sua assinatura';
+  final String value = 'Valor';
+  final String startsAt = 'Começou em';
+  final String renewAt = 'Renova em';
+  final String paymentMethod = 'Método de pagamento';
+  final String rememberMe = 'Me lembrar em:';
+  final String threeDays = '3 dias';
+  final String sevenDays = '7 dias';
+  final String fourteenDays = '14 dias';
+  final String thirtyDays = '30 dias';
+  final String debitCard = 'Débito';
+  final String creditCard = 'Crédito';
+  final String pix = 'Pix';
+  final String bankSlip = 'Boleto';
+  final String cancelSubscription = 'Cancelar assinatura';
 }

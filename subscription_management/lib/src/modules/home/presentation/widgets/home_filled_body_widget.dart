@@ -30,12 +30,13 @@ class HomeFilledBodyWidget extends StatelessWidget {
             ),
           ),
 
-          const MySubscriptionInfoWidget(
-            streamingServiceName: 'Disney+',
-            renewalDate: 'Renova em 20 dias',
-            subscriptionPrice: 27.95,
-            seeDetails: true,
-          ),
+          // const MySubscriptionInfoWidget(
+          //   streamingServiceImage: ,
+          //   streamingServiceName: 'Disney+',
+          //   renewalDate: 'Renova em 20 dias',
+          //   subscriptionPrice: 27.95,
+          //   seeDetails: true,
+          // ),
         ],
       ),
     );

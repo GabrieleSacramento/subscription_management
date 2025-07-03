@@ -10,8 +10,12 @@ class CustomForm extends StatelessWidget {
   final String? Function(String? text)? validator;
   final String? hintText;
   final Widget? suffixIcon;
-  final String label;
-  bool? obscurePassword;
+  final String? label;
+  bool isMandatory;
+  final bool? obscurePassword;
+  final bool isDatePicker;
+  final Function()? onTap;
+  final bool isPrefixHint;
 
   CustomForm({
     super.key,
@@ -20,51 +24,73 @@ class CustomForm extends StatelessWidget {
     this.validator,
     this.hintText,
     this.suffixIcon,
-    this.obscurePassword,
-    required this.label,
+    this.obscurePassword = false,
+    this.label,
+    this.isMandatory = false,
+    this.isDatePicker = false,
+    this.isPrefixHint = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 8.h),
-          child: Row(
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  color: const Color.fromRGBO(111, 86, 221, 1),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14.h,
-                  fontStyle: FontStyle.normal,
-                ),
+        Row(
+          children: [
+            Text(
+              label ?? '',
+              style: TextStyle(
+                color: const Color.fromRGBO(111, 86, 221, 1),
+                fontWeight: FontWeight.w400,
+                fontSize: 14.h,
+                fontStyle: FontStyle.normal,
               ),
-              Text(
-                ' *',
-                style: TextStyle(
-                  color: const Color.fromRGBO(111, 86, 221, 1),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14.h,
-                  fontStyle: FontStyle.normal,
-                ),
+            ),
+            Text(
+              isMandatory ? ' *' : '',
+              style: TextStyle(
+                color: const Color.fromRGBO(111, 86, 221, 1),
+                fontWeight: FontWeight.w400,
+                fontSize: 14.h,
+                fontStyle: FontStyle.normal,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         TextFormField(
-          keyboardType: TextInputType.text,
+          keyboardType: isDatePicker ? TextInputType.none : TextInputType.text,
           obscureText: obscurePassword ?? false,
           controller: controller,
           validator: validator,
           onChanged: onChanged,
+          readOnly: isDatePicker,
+          onTap: onTap,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
-            hintText: hintText,
+            hintText: isPrefixHint ? null : hintText,
+            prefixIcon:
+                isPrefixHint && hintText != null
+                    ? Padding(
+                      padding: EdgeInsets.only(left: 15.h, right: 8.h),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '$hintText: ',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14.h,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    : null,
             contentPadding: EdgeInsets.symmetric(horizontal: 15.h),
             suffixIcon: suffixIcon,
+            suffixIconColor: const Color.fromRGBO(111, 86, 221, 1),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(
@@ -93,7 +119,9 @@ class CustomForm extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          style: const TextStyle(color: Color.fromRGBO(37, 41, 84, 1)),
+          style: const TextStyle(
+            color: Color.fromRGBO(111, 86, 221, 1), // Cor roxa para datas
+          ),
         ),
       ],
     );

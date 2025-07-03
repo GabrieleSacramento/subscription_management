@@ -1,9 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:subscription_management/src/modules/home/presentation/widgets/home_bottom_bar.dart';
+import 'package:subscription_management/src/modules/home/presentation/widgets/bottom_bar.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/home_empty_body_widget.dart';
-import 'package:subscription_management/src/modules/home/presentation/widgets/home_filled_body_widget.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
 
 @RoutePage(name: 'HomePageRoute')
@@ -34,8 +33,8 @@ class HomePage extends StatelessWidget {
           backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
           elevation: 0,
         ),
-        body: HomeFilledBodyWidget(),
-        bottomNavigationBar: const HomeBottomBar(),
+        body: HomeEmptyBodyWidget(),
+        bottomNavigationBar: const BottomBar(),
       ),
     );
   }

@@ -84,7 +84,7 @@ class _SignupPageState extends State<SignupPage> {
                           Padding(
                             padding: EdgeInsets.only(bottom: 16.h),
                             child: CustomForm(
-                              obscurePassword: false,
+                              isMandatory: true,
                               hintText: strings.name,
                               controller: nameController,
                               label: strings.name,
@@ -97,8 +97,8 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                           CustomForm(
+                            isMandatory: true,
                             controller: emailController,
-                            obscurePassword: false,
                             hintText: 'Email',
                             label: 'Email',
                             validator: (text) {
@@ -114,6 +114,7 @@ class _SignupPageState extends State<SignupPage> {
                           Padding(
                             padding: EdgeInsets.only(top: 16.h, bottom: 24.h),
                             child: CustomForm(
+                              isMandatory: true,
                               obscurePassword: isPasswordVisible,
                               hintText: strings.password,
                               controller: passwordController,
