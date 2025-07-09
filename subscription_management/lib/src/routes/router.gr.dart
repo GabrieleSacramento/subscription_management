@@ -12,66 +12,54 @@ part of 'router.dart';
 
 /// generated route for
 /// [AddNewStreamingPage]
-class AddNewStreamingPageRoute
-    extends PageRouteInfo<AddNewStreamingPageRouteArgs> {
-  AddNewStreamingPageRoute({
+class StreamingManagementPageRoute
+    extends PageRouteInfo<StreamingManagementPageRouteArgs> {
+  StreamingManagementPageRoute({
     Key? key,
-    Widget? streamingImage,
     required bool newStreaming,
-    num? streamingValue,
-    String? renewalDate,
+    required StreamingEntity streaming,
     List<PageRouteInfo>? children,
   }) : super(
-         AddNewStreamingPageRoute.name,
-         args: AddNewStreamingPageRouteArgs(
+         StreamingManagementPageRoute.name,
+         args: StreamingManagementPageRouteArgs(
            key: key,
-           streamingImage: streamingImage,
            newStreaming: newStreaming,
-           streamingValue: streamingValue,
-           renewalDate: renewalDate,
+           streaming: streaming,
          ),
          initialChildren: children,
        );
 
-  static const String name = 'AddNewStreamingPageRoute';
+  static const String name = 'StreamingManagementPageRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AddNewStreamingPageRouteArgs>();
+      final args = data.argsAs<StreamingManagementPageRouteArgs>();
       return AddNewStreamingPage(
         key: args.key,
-        streamingImage: args.streamingImage,
         newStreaming: args.newStreaming,
-        streamingValue: args.streamingValue,
-        renewalDate: args.renewalDate,
+        streaming: args.streaming,
       );
     },
   );
 }
 
-class AddNewStreamingPageRouteArgs {
-  const AddNewStreamingPageRouteArgs({
+class StreamingManagementPageRouteArgs {
+  const StreamingManagementPageRouteArgs({
     this.key,
-    this.streamingImage,
     required this.newStreaming,
-    this.streamingValue,
-    this.renewalDate,
+    required this.streaming,
   });
 
   final Key? key;
 
-  final Widget? streamingImage;
-
   final bool newStreaming;
 
-  final num? streamingValue;
-
-  final String? renewalDate;
+  final StreamingEntity streaming;
 
   @override
   String toString() {
-    return 'AddNewStreamingPageRouteArgs{key: $key, streamingImage: $streamingImage, newStreaming: $newStreaming, streamingValue: $streamingValue, renewalDate: $renewalDate}';
+    return 'StreamingManagementPageRouteArgs{key: $key, newStreaming: $newStreaming, streaming: $streaming}';
   }
 }
 

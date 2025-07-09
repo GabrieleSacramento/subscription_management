@@ -34,5 +34,8 @@
     "cancelSubscription": "Cancelar assinatura",
     "save": "Salvar",
     "editSubscription": "Editar assinatura",
-    "nome": "Nome"
+    "nome": "Nome",
+    "errorToLoadSubscriptions": "Erro ao carregar assinaturas",
+    "noSubscriptionsFound": "Nenhuma assinatura encontrada",
+    "noSubscriptionsFoundWithSearchText": "Nenhuma assinatura encontrada com {p1}"
 }

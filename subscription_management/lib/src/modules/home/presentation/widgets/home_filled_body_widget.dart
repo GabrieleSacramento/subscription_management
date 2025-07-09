@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:subscription_management/src/modules/home/domain/entities/streaming_entity.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/my_subscription_info_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/value_spent_information_card.dart';
 import 'package:subscription_management/src/routes/router.dart';
@@ -35,14 +36,16 @@ class HomeFilledBodyWidget extends StatelessWidget {
           MySubscriptionInfoWidget(
             onTap: () {
               context.pushRoute(
-                AddNewStreamingPageRoute(
-                  newStreaming: false,
-                  streamingValue: 23.99,
-                  renewalDate: 'Renova em 10 dias',
-                  streamingImage: Image.asset(
-                    'assets/logos/netflix.png',
-                    fit: BoxFit.contain,
+                StreamingManagementPageRoute(
+                  streaming: const StreamingEntity(
+                    streamingId: '1',
+                    streamingName: 'Netflix',
+
+                    streamingValue: 23.99,
+                    renewalDate: 'Renova em 10 dias',
+                    streamingImage: 'assets/logos/netflix.png',
                   ),
+                  newStreaming: false,
                 ),
               );
             },

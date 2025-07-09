@@ -112,14 +112,14 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(
-                    'Erro ao carregar assinaturas.',
+                    strings.errorToLoadSubscriptions,
                     style: TextStyle(fontSize: 16.sp, color: Colors.red),
                   ),
                 );
               } else if (snapshot.data == null || snapshot.data!.isEmpty) {
                 return Center(
                   child: Text(
-                    'Nenhuma assinatura encontrada.',
+                    strings.noSubscriptionsFound,
                     style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                   ),
                 );
@@ -155,7 +155,11 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
 
                     Center(
                       child: Text(
-                        'Nenhuma assinatura encontrada com "$_searchText"',
+                        strings.noSubscriptionsFoundWithSearchText.replaceAll(
+                          '{p1}',
+                          _searchText,
+                        ),
+
                         style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                         textAlign: TextAlign.center,
                       ),
@@ -216,13 +220,9 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
                         return MySubscriptionInfoWidget(
                           onTap: () {
                             context.pushRoute(
-                              AddNewStreamingPageRoute(
+                              StreamingManagementPageRoute(
+                                streaming: streaming,
                                 newStreaming: true,
-                                streamingValue: 23.99,
-                                streamingImage: Image.asset(
-                                  streaming.streamingImage,
-                                  fit: BoxFit.contain,
-                                ),
                               ),
                             );
                           },

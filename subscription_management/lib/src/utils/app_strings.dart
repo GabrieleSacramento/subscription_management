@@ -40,4 +40,7 @@ class SubscriptionsManagementStrings {
   final String save = 'Salvar';
   final String editSubscription = 'Editar assinatura';
   final String nome = 'Nome';
+  final String errorToLoadSubscriptions = 'Erro ao carregar assinaturas';
+  final String noSubscriptionsFound = 'Nenhuma assinatura encontrada';
+  final String noSubscriptionsFoundWithSearchText = 'Nenhuma assinatura encontrada com {p1}';
 }

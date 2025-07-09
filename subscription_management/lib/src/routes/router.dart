@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:subscription_management/src/modules/streaming_management/presentation/pages/add_new_streaming_page.dart';
+import 'package:subscription_management/src/modules/home/domain/entities/streaming_entity.dart';
+import 'package:subscription_management/src/modules/streaming_management/presentation/pages/streaming_management_page.dart';
 import 'package:subscription_management/src/modules/home/presentation/pages/home_page.dart';
 import 'package:subscription_management/src/modules/login/presentation/pages/select_login_method_page.dart';
 import 'package:subscription_management/src/modules/login/presentation/pages/signup_page.dart';
@@ -21,7 +22,7 @@ class SubscriptionManagerRouter extends RootStackRouter {
     AutoRoute(page: SignupPageRoute.page),
     AutoRoute(page: HomePageRoute.page),
     AutoRoute(page: SelectStreamingPageRoute.page),
-    AutoRoute(page: AddNewStreamingPageRoute.page),
+    AutoRoute(page: StreamingManagementPageRoute.page),
     AutoRoute(page: CostumizeStreamingPageRoute.page),
   ];
 }

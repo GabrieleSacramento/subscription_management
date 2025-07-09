@@ -2,24 +2,21 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:subscription_management/src/modules/home/domain/entities/streaming_entity.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/widgets/dropdown_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_button.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_form.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
 import 'package:subscription_management/src/utils/formatters.dart';
 
-@RoutePage(name: 'AddNewStreamingPageRoute')
+@RoutePage(name: 'StreamingManagementPageRoute')
 class AddNewStreamingPage extends StatefulWidget {
-  final Widget? streamingImage;
-  final num? streamingValue;
+  final StreamingEntity streaming;
   final bool newStreaming;
-  final String? renewalDate;
   const AddNewStreamingPage({
     super.key,
-    this.streamingImage,
     required this.newStreaming,
-    this.streamingValue,
-    this.renewalDate,
+    required this.streaming,
   });
 
   @override
@@ -120,23 +117,27 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                             Align(
                               alignment: Alignment.topLeft,
                               child:
-                                  widget.streamingImage ??
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 16.w),
-                                    child: SizedBox(
-                                      width: 32.w,
-                                      height: 32.h,
-                                      child: widget.streamingImage,
-                                    ),
-                                  ),
+                                  widget.streaming.streamingImage.isNotEmpty
+                                      ? Padding(
+                                        padding: EdgeInsets.only(left: 16.w),
+                                        child: SizedBox(
+                                          width: 32.w,
+                                          height: 32.h,
+                                          child: Image.asset(
+                                            widget.streaming.streamingImage,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      )
+                                      : const SizedBox.shrink(),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  widget.streamingValue != null
+                                  widget.streaming.streamingValue != null
                                       ? CurrencyFormatter.format(
-                                        widget.streamingValue!,
+                                        widget.streaming.streamingValue!,
                                       )
                                       : '',
                                   style: TextStyle(
@@ -151,7 +152,7 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                                   ),
                                 ),
                                 Text(
-                                  widget.renewalDate ?? '',
+                                  widget.streaming.renewalDate ?? '',
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     color: const Color.fromRGBO(77, 77, 97, 1),
