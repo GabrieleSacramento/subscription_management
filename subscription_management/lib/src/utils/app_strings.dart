@@ -37,4 +37,7 @@ class SubscriptionsManagementStrings {
   final String pix = 'Pix';
   final String bankSlip = 'Boleto';
   final String cancelSubscription = 'Cancelar assinatura';
+  final String save = 'Salvar';
+  final String editSubscription = 'Editar assinatura';
+  final String nome = 'Nome';
 }

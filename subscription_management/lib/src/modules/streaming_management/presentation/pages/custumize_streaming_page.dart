@@ -2,23 +2,25 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:subscription_management/src/modules/add_new_streaming/presentation/widgets/dropdown_widget.dart';
+import 'package:subscription_management/src/modules/streaming_management/presentation/widgets/dropdown_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_button.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_form.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
+import 'package:subscription_management/src/utils/formatters.dart';
 
-@RoutePage(name: 'AddNewStreamingPageRoute')
-class AddNewStreamingPage extends StatefulWidget {
-  final Widget? streamingImage;
-  const AddNewStreamingPage({super.key, this.streamingImage});
+@RoutePage(name: 'CostumizeStreamingPageRoute')
+class CostumizeStreamingPage extends StatefulWidget {
+  const CostumizeStreamingPage({super.key});
 
   @override
-  State<AddNewStreamingPage> createState() => _AddNewStreamingPageState();
+  State<CostumizeStreamingPage> createState() => _CostumizeStreamingPageState();
 }
 
-class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
+class _CostumizeStreamingPageState extends State<CostumizeStreamingPage> {
   final strings = SubscriptionsManagementStrings();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _valueController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();
     final DateTime? picked = await showDatePicker(
@@ -49,6 +51,17 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
     }
   }
 
+  void format(String value) {
+    String formattedValue = CurrencyFormatter.formatInput(value);
+
+    if (formattedValue.isNotEmpty) {
+      _valueController.value = TextEditingValue(
+        text: formattedValue,
+        selection: TextSelection.collapsed(offset: formattedValue.length),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -71,7 +84,7 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
           title: Padding(
             padding: EdgeInsets.only(top: 12.h),
             child: Text(
-              strings.addSubscription,
+              strings.costumizeYourSubscription,
               style: TextStyle(
                 fontSize: 20.sp,
                 color: const Color.fromRGBO(111, 86, 221, 1),
@@ -89,20 +102,19 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
                 child: Column(
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child:
-                          widget.streamingImage ??
-                          Padding(
-                            padding: EdgeInsets.only(left: 16.w),
-                            child: SizedBox(
-                              width: 32.w,
-                              height: 32.h,
-                              child: widget.streamingImage,
-                            ),
-                          ),
+                    CustomForm(
+                      hintText: strings.nome,
+                      isPrefixHint: true,
+                      controller: _nameController,
+                      onChanged: (value) => format(value),
                     ),
-                    CustomForm(hintText: strings.value, isPrefixHint: true),
+                    CustomForm(
+                      hintText: strings.value,
+                      isPrefixHint: true,
+                      controller: _valueController,
+                      onChanged: (value) => format(value),
+                      keyboardType: TextInputType.number,
+                    ),
                     CustomForm(
                       hintText: strings.startsAt,
                       isPrefixHint: true,
@@ -141,13 +153,16 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24.h,
-                      vertical: 32.h,
+                    padding: EdgeInsets.only(
+                      left: 24.h,
+                      right: 24.h,
+                      bottom: 32.h,
+                      top: 32.h,
                     ),
                     child: CustomButton(
                       isLarge: true,
                       textButton: strings.addSubscription,
+
                       onPressed: () {},
                     ),
                   ),

@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:subscription_management/src/routes/router.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({super.key});
@@ -23,7 +25,9 @@ class BottomBar extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                context.pushRoute(const SelectStreamingPageRoute());
+              },
               child: CircleAvatar(
                 backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
                 child: Icon(

@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/my_subscription_info_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/value_spent_information_card.dart';
+import 'package:subscription_management/src/routes/router.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
 
 class HomeFilledBodyWidget extends StatelessWidget {
@@ -30,13 +32,30 @@ class HomeFilledBodyWidget extends StatelessWidget {
             ),
           ),
 
-          // const MySubscriptionInfoWidget(
-          //   streamingServiceImage: ,
-          //   streamingServiceName: 'Disney+',
-          //   renewalDate: 'Renova em 20 dias',
-          //   subscriptionPrice: 27.95,
-          //   seeDetails: true,
-          // ),
+          MySubscriptionInfoWidget(
+            onTap: () {
+              context.pushRoute(
+                AddNewStreamingPageRoute(
+                  newStreaming: false,
+                  streamingValue: 23.99,
+                  renewalDate: 'Renova em 10 dias',
+                  streamingImage: Image.asset(
+                    'assets/logos/netflix.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              );
+            },
+            streamingServiceImage: Image.asset(
+              'assets/logos/netflix.png',
+              width: 32.w,
+              height: 32.h,
+            ),
+            streamingServiceName: 'Disney+',
+            renewalDate: 'Renova em 20 dias',
+            subscriptionPrice: 27.95,
+            seeDetails: true,
+          ),
         ],
       ),
     );

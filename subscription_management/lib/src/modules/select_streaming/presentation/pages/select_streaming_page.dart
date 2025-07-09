@@ -181,7 +181,11 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
                       itemBuilder: (context, index) {
                         if (index == 0) {
                           return GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              context.pushRoute(
+                                const CostumizeStreamingPageRoute(),
+                              );
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -213,6 +217,8 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
                           onTap: () {
                             context.pushRoute(
                               AddNewStreamingPageRoute(
+                                newStreaming: true,
+                                streamingValue: 23.99,
                                 streamingImage: Image.asset(
                                   streaming.streamingImage,
                                   fit: BoxFit.contain,

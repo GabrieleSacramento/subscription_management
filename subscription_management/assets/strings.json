@@ -31,5 +31,8 @@
     "creditCard": "Crédito",
     "pix": "Pix",
     "bankSlip": "Boleto",
-    "cancelSubscription": "Cancelar assinatura"
+    "cancelSubscription": "Cancelar assinatura",
+    "save": "Salvar",
+    "editSubscription": "Editar assinatura",
+    "nome": "Nome"
 }

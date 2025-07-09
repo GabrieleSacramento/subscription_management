@@ -17,12 +17,18 @@ class AddNewStreamingPageRoute
   AddNewStreamingPageRoute({
     Key? key,
     Widget? streamingImage,
+    required bool newStreaming,
+    num? streamingValue,
+    String? renewalDate,
     List<PageRouteInfo>? children,
   }) : super(
          AddNewStreamingPageRoute.name,
          args: AddNewStreamingPageRouteArgs(
            key: key,
            streamingImage: streamingImage,
+           newStreaming: newStreaming,
+           streamingValue: streamingValue,
+           renewalDate: renewalDate,
          ),
          initialChildren: children,
        );
@@ -32,28 +38,57 @@ class AddNewStreamingPageRoute
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AddNewStreamingPageRouteArgs>(
-        orElse: () => const AddNewStreamingPageRouteArgs(),
-      );
+      final args = data.argsAs<AddNewStreamingPageRouteArgs>();
       return AddNewStreamingPage(
         key: args.key,
         streamingImage: args.streamingImage,
+        newStreaming: args.newStreaming,
+        streamingValue: args.streamingValue,
+        renewalDate: args.renewalDate,
       );
     },
   );
 }
 
 class AddNewStreamingPageRouteArgs {
-  const AddNewStreamingPageRouteArgs({this.key, this.streamingImage});
+  const AddNewStreamingPageRouteArgs({
+    this.key,
+    this.streamingImage,
+    required this.newStreaming,
+    this.streamingValue,
+    this.renewalDate,
+  });
 
   final Key? key;
 
   final Widget? streamingImage;
 
+  final bool newStreaming;
+
+  final num? streamingValue;
+
+  final String? renewalDate;
+
   @override
   String toString() {
-    return 'AddNewStreamingPageRouteArgs{key: $key, streamingImage: $streamingImage}';
+    return 'AddNewStreamingPageRouteArgs{key: $key, streamingImage: $streamingImage, newStreaming: $newStreaming, streamingValue: $streamingValue, renewalDate: $renewalDate}';
   }
+}
+
+/// generated route for
+/// [CostumizeStreamingPage]
+class CostumizeStreamingPageRoute extends PageRouteInfo<void> {
+  const CostumizeStreamingPageRoute({List<PageRouteInfo>? children})
+    : super(CostumizeStreamingPageRoute.name, initialChildren: children);
+
+  static const String name = 'CostumizeStreamingPageRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CostumizeStreamingPage();
+    },
+  );
 }
 
 /// generated route for

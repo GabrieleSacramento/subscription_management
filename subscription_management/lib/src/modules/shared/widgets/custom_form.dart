@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // ignore: must_be_immutable
@@ -16,6 +17,7 @@ class CustomForm extends StatelessWidget {
   final bool isDatePicker;
   final Function()? onTap;
   final bool isPrefixHint;
+  final TextInputType? keyboardType;
 
   CustomForm({
     super.key,
@@ -29,6 +31,7 @@ class CustomForm extends StatelessWidget {
     this.isMandatory = false,
     this.isDatePicker = false,
     this.isPrefixHint = false,
+    this.keyboardType,
     this.onTap,
   });
 
@@ -59,7 +62,11 @@ class CustomForm extends StatelessWidget {
           ],
         ),
         TextFormField(
-          keyboardType: isDatePicker ? TextInputType.none : TextInputType.text,
+          keyboardType: isDatePicker ? TextInputType.none : keyboardType,
+          inputFormatters: [
+            if (keyboardType == TextInputType.number)
+              FilteringTextInputFormatter.digitsOnly,
+          ],
           obscureText: obscurePassword ?? false,
           controller: controller,
           validator: validator,
