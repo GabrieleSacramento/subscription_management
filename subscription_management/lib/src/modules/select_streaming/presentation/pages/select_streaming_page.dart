@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:subscription_management/src/modules/home/data/models/streaming_model.dart';
 import 'package:subscription_management/src/modules/home/domain/entities/streaming_entity.dart';
-import 'package:subscription_management/src/modules/home/presentation/widgets/bottom_bar.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/my_subscription_info_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_form.dart';
 import 'package:subscription_management/src/routes/router.dart';
@@ -240,7 +239,6 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
             },
           ),
         ),
-        bottomNavigationBar: const BottomBar(),
       ),
     );
   }

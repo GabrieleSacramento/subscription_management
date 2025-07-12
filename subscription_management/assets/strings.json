@@ -4,6 +4,7 @@
     "amountSpentThisMonth": "Valor gasto esse mês",
     "subscriptions": " assinaturas",
     "enter": "Entrar",
+    "createAccount": "Criar conta",
     "name": "Nome",
     "email": "Email",
     "password": "Senha",
@@ -37,5 +38,7 @@
     "nome": "Nome",
     "errorToLoadSubscriptions": "Erro ao carregar assinaturas",
     "noSubscriptionsFound": "Nenhuma assinatura encontrada",
-    "noSubscriptionsFoundWithSearchText": "Nenhuma assinatura encontrada com {p1}"
+    "noSubscriptionsFoundWithSearchText": "Nenhuma assinatura encontrada com {p1}",
+    "logout": "Sair",
+    "somethingWentWrong": "Algo deu errado, tente novamente mais tarde"
 }

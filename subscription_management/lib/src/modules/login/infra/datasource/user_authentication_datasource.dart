@@ -4,4 +4,5 @@ import 'package:subscription_management/src/modules/login/domain/entities/user_a
 
 abstract class UserAuthenticationDatasource {
   So<String?, User> signup(UserAuthenticationEntity user);
+  So<String?, User> signIn(UserAuthenticationEntity user);
 }

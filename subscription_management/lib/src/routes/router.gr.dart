@@ -116,6 +116,43 @@ class HomePageRouteArgs {
 }
 
 /// generated route for
+/// [LoginPage]
+class LoginPageRoute extends PageRouteInfo<LoginPageRouteArgs> {
+  LoginPageRoute({
+    Key? key,
+    required bool isFromSignUp,
+    List<PageRouteInfo>? children,
+  }) : super(
+         LoginPageRoute.name,
+         args: LoginPageRouteArgs(key: key, isFromSignUp: isFromSignUp),
+         initialChildren: children,
+       );
+
+  static const String name = 'LoginPageRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<LoginPageRouteArgs>();
+      return LoginPage(key: args.key, isFromSignUp: args.isFromSignUp);
+    },
+  );
+}
+
+class LoginPageRouteArgs {
+  const LoginPageRouteArgs({this.key, required this.isFromSignUp});
+
+  final Key? key;
+
+  final bool isFromSignUp;
+
+  @override
+  String toString() {
+    return 'LoginPageRouteArgs{key: $key, isFromSignUp: $isFromSignUp}';
+  }
+}
+
+/// generated route for
 /// [SelectLoginMethodPage]
 class SelectLoginMethodRoute extends PageRouteInfo<SelectLoginMethodRouteArgs> {
   SelectLoginMethodRoute({Key? key, List<PageRouteInfo>? children})
@@ -161,22 +198,6 @@ class SelectStreamingPageRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const SelectStreamingPage();
-    },
-  );
-}
-
-/// generated route for
-/// [SignupPage]
-class SignupPageRoute extends PageRouteInfo<void> {
-  const SignupPageRoute({List<PageRouteInfo>? children})
-    : super(SignupPageRoute.name, initialChildren: children);
-
-  static const String name = 'SignupPageRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const SignupPage();
     },
   );
 }

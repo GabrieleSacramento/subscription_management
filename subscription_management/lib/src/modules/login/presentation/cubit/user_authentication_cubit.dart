@@ -28,6 +28,22 @@ class UserAuthenticationCubit extends Cubit<Do<Exception, User>> {
     );
   }
 
+  void signIn(UserAuthenticationEntity userEntity) async {
+    emit(const Do.loading());
+    final result = await userAuthenticationUseCase.signIn(userEntity);
+    final sp = await SharedPreferences.getInstance();
+    result.fold(
+      onFailure: (exception) {
+        emit(Do.failure(Exception(exception)));
+      },
+      onSuccess: (user) async {
+        String? token = await user.getIdToken();
+        await sp.setString('token', '$token');
+        emit(Do.success(user));
+      },
+    );
+  }
+
   void logout() async {
     final sp = await SharedPreferences.getInstance();
     await sp.remove('token');

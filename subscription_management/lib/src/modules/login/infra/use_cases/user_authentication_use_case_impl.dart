@@ -13,4 +13,9 @@ class UserAuthenticationUseCaseImpl implements UserAuthenticationUseCase {
   So<String?, User> signup(UserAuthenticationEntity user) {
     return repository.signup(user);
   }
+
+  @override
+  So<String?, User> signIn(UserAuthenticationEntity user) {
+    return repository.signIn(user);
+  }
 }

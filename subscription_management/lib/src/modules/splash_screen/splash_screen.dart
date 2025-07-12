@@ -64,7 +64,9 @@ class _SplashScreenState extends State<SplashScreen>
         backgroundColor: const Color.fromRGBO(228, 228, 237, 1),
         body: BlocListener<UserAuthenticationCubit, UserAuthenticationState>(
           listener: (context, state) {
-            if (state.isSuccess) {
+            if (state.isInitial) {
+              _navigateToSelectLoginMethodPage();
+            } else if (state.isSuccess) {
               _navigateToHomePage();
             } else if (state.isFailure) {
               _navigateToSelectLoginMethodPage();

@@ -19,4 +19,18 @@ class UserAuthenticationDatasourceImpl implements UserAuthenticationDatasource {
       return exception.toString();
     },
   );
+
+  @override
+  So<String?, User> signIn(UserAuthenticationEntity user) => Do.tryCatch(
+    onTry: () async {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+        email: user.email,
+        password: user.password,
+      );
+      return userCredential.user!;
+    },
+    onCatch: (exception, stackTrace) {
+      return exception.toString();
+    },
+  );
 }

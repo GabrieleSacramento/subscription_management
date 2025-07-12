@@ -9,6 +9,7 @@ class SubscriptionsManagementStrings {
   final String amountSpentThisMonth = 'Valor gasto esse mês';
   final String subscriptions = ' assinaturas';
   final String enter = 'Entrar';
+  final String createAccount = 'Criar conta';
   final String name = 'Nome';
   final String email = 'Email';
   final String password = 'Senha';
@@ -43,4 +44,6 @@ class SubscriptionsManagementStrings {
   final String errorToLoadSubscriptions = 'Erro ao carregar assinaturas';
   final String noSubscriptionsFound = 'Nenhuma assinatura encontrada';
   final String noSubscriptionsFoundWithSearchText = 'Nenhuma assinatura encontrada com {p1}';
+  final String logout = 'Sair';
+  final String somethingWentWrong = 'Algo deu errado, tente novamente mais tarde';
 }

@@ -14,25 +14,37 @@ import 'package:subscription_management/src/modules/shared/widgets/loading_butto
 import 'package:subscription_management/src/routes/router.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
 
-@RoutePage(name: 'SignupPageRoute')
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+@RoutePage(name: 'LoginPageRoute')
+class LoginPage extends StatefulWidget {
+  final bool isFromSignUp;
+  const LoginPage({super.key, required this.isFromSignUp});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final strings = SubscriptionsManagementStrings();
-  final _signupCubit = GetIt.I.get<UserAuthenticationCubit>();
+  final _loginCubit = GetIt.I.get<UserAuthenticationCubit>();
 
   bool isPasswordVisible = false;
+
   _navigateToHomePage(String? userName) {
-    context.pushRoute(HomePageRoute(userName: null));
+    context.pushRoute(HomePageRoute(userName: userName));
+  }
+
+  Future<String?> _getUserName(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userName_$email');
+  }
+
+  Future<void> _saveUserName(String email, String userName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName_$email', userName);
   }
 
   @override
@@ -53,14 +65,15 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => _signupCubit,
+      create: (context) => _loginCubit,
       child: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
             backgroundColor: Colors.white,
             appBar: CustomAppBar(
-              appBarTitle: strings.enter,
+              appBarTitle:
+                  widget.isFromSignUp ? strings.createAccount : strings.enter,
               isBackButtonVisible: true,
               backgroundColor: Colors.white,
               appBarTitleColor: const Color.fromRGBO(111, 86, 221, 1),
@@ -81,21 +94,23 @@ class _SignupPageState extends State<SignupPage> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 16.h),
-                            child: CustomForm(
-                              isMandatory: true,
-                              hintText: strings.name,
-                              controller: nameController,
-                              label: strings.name,
-                              validator: (text) {
-                                if (text == null || text.isEmpty) {
-                                  return strings.thisFieldIsRequired;
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
+                          widget.isFromSignUp
+                              ? Padding(
+                                padding: EdgeInsets.only(bottom: 16.h),
+                                child: CustomForm(
+                                  isMandatory: true,
+                                  hintText: strings.name,
+                                  controller: nameController,
+                                  label: strings.name,
+                                  validator: (text) {
+                                    if (text == null || text.isEmpty) {
+                                      return strings.thisFieldIsRequired;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              )
+                              : const SizedBox.shrink(),
                           CustomForm(
                             isMandatory: true,
                             controller: emailController,
@@ -155,18 +170,19 @@ class _SignupPageState extends State<SignupPage> {
                           showActionSnackBarError(context);
                         } else if (state.isSuccess) {
                           final email = emailController.text;
+                          String? userName;
 
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          final userName =
-                              prefs.getString('userName_$email') ??
-                              'Usuário não identificado';
+                          if (widget.isFromSignUp) {
+                            userName = nameController.text;
+                            await _saveUserName(email, userName);
+                          } else {
+                            userName = await _getUserName(email);
+                          }
 
                           _navigateToHomePage(userName);
                           clearForm();
                         }
                       },
-
                       builder: (context, state) {
                         return state.isLoading
                             ? const LoadingButton(isLarge: true)
@@ -174,12 +190,19 @@ class _SignupPageState extends State<SignupPage> {
                               textButton: strings.enter,
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  _signupCubit.signup(
-                                    UserAuthenticationEntity(
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                    ),
-                                  );
+                                  widget.isFromSignUp
+                                      ? _loginCubit.signup(
+                                        UserAuthenticationEntity(
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                        ),
+                                      )
+                                      : _loginCubit.signIn(
+                                        UserAuthenticationEntity(
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                        ),
+                                      );
                                 }
                               },
                               isLarge: true,

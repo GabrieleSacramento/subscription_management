@@ -14,4 +14,10 @@ class UserAuthenticationRepositoryImpl implements UserAuthenticationRepository {
     final result = await datasource.signup(user);
     return result;
   }
+
+  @override
+  So<String?, User> signIn(UserAuthenticationEntity user) async {
+    final result = await datasource.signIn(user);
+    return result;
+  }
 }
