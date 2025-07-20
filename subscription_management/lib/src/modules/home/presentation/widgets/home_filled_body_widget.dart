@@ -1,15 +1,26 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:subscription_management/src/modules/home/domain/entities/streaming_entity.dart';
+
+import 'package:subscription_management/src/modules/home/domain/enums/payment_method.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/my_subscription_info_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/value_spent_information_card.dart';
+import 'package:subscription_management/src/modules/streaming_management/domain/entities/streaming_entity.dart';
 import 'package:subscription_management/src/routes/router.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
+import 'package:subscription_management/src/utils/get_days_until_renewal.dart';
 
-class HomeFilledBodyWidget extends StatelessWidget {
+class HomeFilledBodyWidget extends StatefulWidget {
+  final StreamingEntity? streamingEntity;
+
+  const HomeFilledBodyWidget({super.key, this.streamingEntity});
+
+  @override
+  State<HomeFilledBodyWidget> createState() => _HomeFilledBodyWidgetState();
+}
+
+class _HomeFilledBodyWidgetState extends State<HomeFilledBodyWidget> {
   final strings = SubscriptionsManagementStrings();
-  HomeFilledBodyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +48,19 @@ class HomeFilledBodyWidget extends StatelessWidget {
             onTap: () {
               context.pushRoute(
                 StreamingManagementPageRoute(
-                  streaming: const StreamingEntity(
+                  streaming: StreamingEntity(
                     streamingId: '1',
                     streamingName: 'Netflix',
-
                     streamingValue: 23.99,
-                    renewalDate: 'Renova em 10 dias',
+                    renewalDate: DateTime.now().add(
+                      Duration(
+                        days: getDaysUntilRenewal(
+                          widget.streamingEntity?.renewalDate ?? DateTime.now(),
+                        ),
+                      ),
+                    ),
                     streamingImage: 'assets/logos/netflix.png',
+                    paymentMethod: PaymentMethod.creditCard,
                   ),
                   newStreaming: false,
                 ),

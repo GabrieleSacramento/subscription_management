@@ -17,4 +17,17 @@ class CurrencyFormatter {
 
     return format(amount);
   }
+
+  static double? parse(String value) {
+    if (value.isEmpty) return null;
+
+    // Remove o símbolo da moeda (R$), espaços e pontos de milhares
+    String cleanValue = value
+        .replaceAll('R\$', '')
+        .replaceAll(' ', '')
+        .replaceAll('.', '')
+        .replaceAll(',', '.');
+
+    return double.tryParse(cleanValue);
+  }
 }

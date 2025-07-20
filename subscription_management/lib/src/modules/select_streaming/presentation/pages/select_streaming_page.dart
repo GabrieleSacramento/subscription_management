@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:subscription_management/src/modules/home/data/models/streaming_model.dart';
-import 'package:subscription_management/src/modules/home/domain/entities/streaming_entity.dart';
+import 'package:subscription_management/src/modules/streaming_management/data/models/streaming_model.dart';
+import 'package:subscription_management/src/modules/streaming_management/domain/entities/streaming_entity.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/my_subscription_info_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_form.dart';
 import 'package:subscription_management/src/routes/router.dart';
@@ -227,7 +227,7 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
                           },
                           streamingServiceName: streaming.streamingName,
                           streamingServiceImage: Image.asset(
-                            streaming.streamingImage,
+                            streaming.streamingImage!,
                             fit: BoxFit.contain,
                           ),
                         );

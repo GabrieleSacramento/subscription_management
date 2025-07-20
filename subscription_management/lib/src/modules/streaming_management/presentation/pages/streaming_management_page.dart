@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:subscription_management/src/modules/home/domain/entities/streaming_entity.dart';
+import 'package:subscription_management/src/modules/streaming_management/domain/entities/streaming_entity.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/widgets/dropdown_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_button.dart';
 import 'package:subscription_management/src/modules/shared/widgets/custom_form.dart';
@@ -25,9 +25,15 @@ class AddNewStreamingPage extends StatefulWidget {
 
 class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
   final strings = SubscriptionsManagementStrings();
-  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _startsAtController = TextEditingController();
+  final TextEditingController _renewalDateController = TextEditingController();
   final TextEditingController _valueController = TextEditingController();
-  Future<void> _selectDate(BuildContext context) async {
+  final TextEditingController _nameController = TextEditingController();
+  String? _selectedPaymentMethod;
+  Future<void> _selectDate(
+    BuildContext context,
+    TextEditingController controller,
+  ) async {
     final DateTime now = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -52,7 +58,7 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
 
     if (picked != null) {
       setState(() {
-        _dateController.text = DateFormat('dd/MM/yyyy').format(picked);
+        controller.text = DateFormat('dd/MM/yyyy').format(picked);
       });
     }
   }
@@ -117,14 +123,14 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                             Align(
                               alignment: Alignment.topLeft,
                               child:
-                                  widget.streaming.streamingImage.isNotEmpty
+                                  widget.streaming.streamingImage != ''
                                       ? Padding(
                                         padding: EdgeInsets.only(left: 16.w),
                                         child: SizedBox(
                                           width: 32.w,
                                           height: 32.h,
                                           child: Image.asset(
-                                            widget.streaming.streamingImage,
+                                            widget.streaming.streamingImage!,
                                             fit: BoxFit.contain,
                                           ),
                                         ),
@@ -152,7 +158,11 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                                   ),
                                 ),
                                 Text(
-                                  widget.streaming.renewalDate ?? '',
+                                  widget.streaming.renewalDate != null
+                                      ? DateFormat(
+                                        'dd/MM/yyyy',
+                                      ).format(widget.streaming.renewalDate!)
+                                      : '',
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     color: const Color.fromRGBO(77, 77, 97, 1),
@@ -164,9 +174,26 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                         )
                         : const SizedBox.shrink(),
                     CustomForm(
+                      hintText: strings.name,
+                      isPrefixHint: true,
+                      controller:
+                          widget.streaming.streamingName != ''
+                              ? TextEditingController(
+                                text: widget.streaming.streamingName,
+                              )
+                              : _nameController,
+                    ),
+                    CustomForm(
                       hintText: strings.value,
                       isPrefixHint: true,
-                      controller: _valueController,
+                      controller:
+                          widget.streaming.streamingValue != null
+                              ? TextEditingController(
+                                text: CurrencyFormatter.format(
+                                  widget.streaming.streamingValue!,
+                                ),
+                              )
+                              : _valueController,
                       onChanged: (value) => format(value),
                       keyboardType: TextInputType.number,
                     ),
@@ -174,19 +201,20 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                       hintText: strings.startsAt,
                       isPrefixHint: true,
                       suffixIcon: const Icon(Icons.calendar_month),
-                      controller: _dateController,
+                      controller: _startsAtController,
                       isDatePicker: true,
-                      onTap: () => _selectDate(context),
+                      onTap: () => _selectDate(context, _startsAtController),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.h),
-                      child: DropdownWidget(
-                        options: [
-                          strings.threeDays,
-                          strings.sevenDays,
-                          strings.fourteenDays,
-                          strings.thirtyDays,
-                        ],
+                      padding: EdgeInsets.only(bottom: 16.h),
+                      child: CustomForm(
+                        hintText: strings.renewAt,
+                        isPrefixHint: true,
+                        suffixIcon: const Icon(Icons.calendar_month),
+                        controller: _renewalDateController,
+                        isDatePicker: true,
+                        onTap:
+                            () => _selectDate(context, _renewalDateController),
                       ),
                     ),
                     DropdownWidget(
@@ -197,6 +225,12 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                         strings.pix,
                         strings.bankSlip,
                       ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedPaymentMethod = value;
+                        });
+                      },
+                      selectedValue: _selectedPaymentMethod,
                     ),
                   ],
                 ),

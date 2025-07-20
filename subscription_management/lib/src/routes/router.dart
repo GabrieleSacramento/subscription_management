@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:subscription_management/src/modules/home/domain/entities/streaming_entity.dart';
+import 'package:subscription_management/src/modules/streaming_management/domain/entities/streaming_entity.dart';
 import 'package:subscription_management/src/modules/login/presentation/pages/login_page.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/pages/streaming_management_page.dart';
 import 'package:subscription_management/src/modules/home/presentation/pages/home_page.dart';
