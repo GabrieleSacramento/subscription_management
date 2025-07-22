@@ -9,8 +9,8 @@ part 'streaming_model.g.dart';
 @JsonSerializable()
 class StreamingModel extends Equatable {
   final String? streamingId;
+  final String? streamingImage;
   final String streamingName;
-  final String streamingImage;
   final num? streamingValue;
   @TimestampConverter()
   final DateTime? renewalDate;
@@ -20,12 +20,12 @@ class StreamingModel extends Equatable {
 
   const StreamingModel({
     this.streamingId,
+    this.streamingImage,
     this.startsAt,
     this.paymentMethod,
     this.streamingValue,
     this.renewalDate,
     required this.streamingName,
-    required this.streamingImage,
   });
 
   factory StreamingModel.fromJson(Map<String, dynamic> json) =>
@@ -37,9 +37,10 @@ class StreamingModel extends Equatable {
     return StreamingModel(
       streamingId: data['streamingId'] as String?,
       streamingName: data['streamingName'] as String,
-      streamingImage: data['streamingImage'] as String,
+      streamingImage: data['streamingImage'] as String?,
       streamingValue: (data['streamingValue'] as num?)?.toDouble(),
       renewalDate: _convertTimestamp(data['renewalDate']),
+      startsAt: _convertTimestamp(data['startsAt']),
       paymentMethod:
           data['paymentMethod'] != null
               ? PaymentMethod.values.firstWhere(
@@ -57,6 +58,7 @@ class StreamingModel extends Equatable {
       streamingImage: streamingImage,
       streamingValue: streamingValue,
       renewalDate: renewalDate,
+      startsAt: startsAt,
       paymentMethod: paymentMethod,
     );
   }
@@ -65,9 +67,10 @@ class StreamingModel extends Equatable {
     return StreamingModel(
       streamingId: entity.streamingId,
       streamingName: entity.streamingName,
-      streamingImage: entity.streamingImage ?? '',
+      streamingImage: entity.streamingImage,
       streamingValue: entity.streamingValue,
       renewalDate: entity.renewalDate,
+      startsAt: entity.startsAt,
       paymentMethod: entity.paymentMethod,
     );
   }
@@ -81,5 +84,13 @@ class StreamingModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [streamingId, streamingName, streamingImage];
+  List<Object?> get props => [
+    streamingId,
+    streamingName,
+    streamingImage,
+    streamingValue,
+    renewalDate,
+    startsAt,
+    paymentMethod,
+  ];
 }

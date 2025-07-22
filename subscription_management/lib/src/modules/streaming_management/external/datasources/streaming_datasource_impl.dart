@@ -16,16 +16,10 @@ class StreamingDataSourceImpl implements StreamingDataSource {
 
   @override
   Stream<List<StreamingEntity>> getStreaming() {
-    return firestore
-        .collection("streaming")
-        .orderBy("createdAt", descending: true)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
-              .map(
-                (doc) => StreamingModel.fromJson(doc.data()) as StreamingEntity,
-              )
-              .toList();
-        });
+    return firestore.collection("streaming").snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => StreamingModel.fromJson(doc.data()).toEntity())
+          .toList();
+    });
   }
 }

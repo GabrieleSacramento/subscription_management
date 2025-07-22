@@ -52,8 +52,9 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             titleSpacing: 24.w,
+            scrolledUnderElevation: 0.1,
             title: Padding(
-              padding: EdgeInsets.only(top: 24.h),
+              padding: EdgeInsets.only(top: 8.h),
               child: Text(
                 widget.userName ?? strings.welcome,
                 style: TextStyle(
@@ -70,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                         Scaffold.of(context).openEndDrawer();
                       },
                       child: Padding(
-                        padding: EdgeInsets.only(right: 24.w, top: 24.h),
+                        padding: EdgeInsets.only(right: 24.w, top: 8.h),
                         child: const Icon(
                           Icons.menu_rounded,
                           color: Color.fromRGBO(111, 86, 221, 1),

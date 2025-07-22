@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MySubscriptionInfoWidget extends StatelessWidget {
   final String streamingServiceName;
-  final Widget streamingServiceImage;
+  final Widget? streamingServiceImage;
 
   final String? renewalDate;
   final num? subscriptionPrice;
@@ -16,7 +16,7 @@ class MySubscriptionInfoWidget extends StatelessWidget {
     this.subscriptionPrice,
     this.seeDetails = false,
     required this.onTap,
-    required this.streamingServiceImage,
+    this.streamingServiceImage,
   });
 
   @override
@@ -40,21 +40,24 @@ class MySubscriptionInfoWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 16.w),
-                  child: Container(
-                    padding: EdgeInsets.all(2.w),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(0, 0, 0, .06),
-                      border: Border.all(
-                        width: 1.w,
-                        color: const Color.fromRGBO(111, 86, 221, 1),
+                Visibility(
+                  visible: streamingServiceImage != null,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 16.w),
+                    child: Container(
+                      padding: EdgeInsets.all(2.w),
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(0, 0, 0, .06),
+                        border: Border.all(
+                          width: 1.w,
+                          color: const Color.fromRGBO(111, 86, 221, 1),
+                        ),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
-                      borderRadius: BorderRadius.circular(8.r),
+                      width: 32.w,
+                      height: 32.h,
+                      child: streamingServiceImage,
                     ),
-                    width: 32.w,
-                    height: 32.h,
-                    child: streamingServiceImage,
                   ),
                 ),
                 Column(

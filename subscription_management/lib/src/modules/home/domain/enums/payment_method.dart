@@ -3,8 +3,10 @@ enum PaymentMethod {
   debitCard,
   pix;
 
-  String get name {
-    switch (this) {
+  static String? getStringFromPaymentMethod(PaymentMethod? paymentMethod) {
+    switch (paymentMethod) {
+      case null:
+        return null;
       case PaymentMethod.creditCard:
         return 'Crédito';
       case PaymentMethod.debitCard:
@@ -16,11 +18,11 @@ enum PaymentMethod {
 
   static PaymentMethod? getPaymentMethodFromString(String? value) {
     switch (value) {
-      case 'Cartão de Débito': // ou strings.debitCard
+      case 'Débito':
         return PaymentMethod.debitCard;
-      case 'Cartão de Crédito': // ou strings.creditCard
+      case 'Crédito':
         return PaymentMethod.creditCard;
-      case 'PIX': // ou strings.pix
+      case 'Pix':
         return PaymentMethod.pix;
       default:
         return null;
