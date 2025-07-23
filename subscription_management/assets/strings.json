@@ -40,5 +40,11 @@
     "noSubscriptionsFound": "Nenhuma assinatura encontrada",
     "noSubscriptionsFoundWithSearchText": "Nenhuma assinatura encontrada com {p1}",
     "logout": "Sair",
-    "somethingWentWrong": "Algo deu errado, tente novamente mais tarde"
+    "somethingWentWrong": "Algo deu errado, tente novamente mais tarde",
+    "errorToCancelSubscription": "Erro ao cancelar assinatura, tente novamente mais tarde",
+    "errorToUpdateSubscription": "Erro ao atualizar assinatura, tente novamente mais tarde",
+    "errorToCreateSubscription": "Erro ao adicionar assinatura, tente novamente mais tarde",
+    "subscriptionCanceled": "Assinatura cancelada com sucesso",
+    "subscriptionUpdated": "Assinatura atualizada com sucesso",
+    "subscriptionCreated": "Assinatura adicionada com sucesso"
 }

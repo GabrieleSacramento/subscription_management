@@ -46,4 +46,10 @@ class SubscriptionsManagementStrings {
   final String noSubscriptionsFoundWithSearchText = 'Nenhuma assinatura encontrada com {p1}';
   final String logout = 'Sair';
   final String somethingWentWrong = 'Algo deu errado, tente novamente mais tarde';
+  final String errorToCancelSubscription = 'Erro ao cancelar assinatura, tente novamente mais tarde';
+  final String errorToUpdateSubscription = 'Erro ao atualizar assinatura, tente novamente mais tarde';
+  final String errorToCreateSubscription = 'Erro ao adicionar assinatura, tente novamente mais tarde';
+  final String subscriptionCanceled = 'Assinatura cancelada com sucesso';
+  final String subscriptionUpdated = 'Assinatura atualizada com sucesso';
+  final String subscriptionCreated = 'Assinatura adicionada com sucesso';
 }

@@ -19,6 +19,7 @@ import 'package:subscription_management/src/utils/formatters.dart';
 class StreamingManagementPage extends StatefulWidget {
   final StreamingEntity streaming;
   final bool newStreaming;
+
   const StreamingManagementPage({
     super.key,
     required this.newStreaming,
@@ -31,51 +32,93 @@ class StreamingManagementPage extends StatefulWidget {
 }
 
 class _StreamingManagementPageState extends State<StreamingManagementPage> {
+  static const _backgroundColor = Color.fromRGBO(243, 243, 243, 1);
+  static const _primaryColor = Color.fromRGBO(111, 86, 221, 1);
+  static const _deleteColor = Color.fromRGBO(221, 86, 86, 1);
+  static const _dateFormat = 'dd/MM/yyyy';
+
   final strings = SubscriptionsManagementStrings();
-  final TextEditingController _startsAtController = TextEditingController();
-  final TextEditingController _renewalDateController = TextEditingController();
-  final TextEditingController _valueController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
   final _streamingCubit = GetIt.I.get<StreamingManagementCubit>();
-  final ValueNotifier<bool> _isSavingNotifier = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> _isCancelingNotifier = ValueNotifier<bool>(false);
+
+  final _nameController = TextEditingController();
+  final _valueController = TextEditingController();
+  final _startsAtController = TextEditingController();
+  final _renewalDateController = TextEditingController();
+
+  final _isSavingNotifier = ValueNotifier<bool>(false);
+  final _isDeletingNotifier = ValueNotifier<bool>(false);
   PaymentMethod? _selectedPaymentMethod;
-  Future<void> _selectDate(
-    BuildContext context,
-    TextEditingController controller,
-  ) async {
-    final DateTime now = DateTime.now();
-    final DateTime? picked = await showDatePicker(
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFields();
+  }
+
+  @override
+  void dispose() {
+    _disposeControllers();
+    super.dispose();
+  }
+
+  void _initializeFields() {
+    _nameController.text = widget.streaming.streamingName;
+
+    if (!widget.newStreaming) {
+      _initializeEditFields();
+    }
+  }
+
+  void _initializeEditFields() {
+    if (widget.streaming.streamingValue != null) {
+      _valueController.text = CurrencyFormatter.format(
+        widget.streaming.streamingValue!,
+      );
+    }
+
+    if (widget.streaming.startsAt != null) {
+      _startsAtController.text = DateFormat(
+        _dateFormat,
+      ).format(widget.streaming.startsAt!);
+    }
+
+    if (widget.streaming.renewalDate != null) {
+      _renewalDateController.text = DateFormat(
+        _dateFormat,
+      ).format(widget.streaming.renewalDate!);
+    }
+
+    _selectedPaymentMethod = widget.streaming.paymentMethod;
+  }
+
+  void _disposeControllers() {
+    _nameController.dispose();
+    _valueController.dispose();
+    _startsAtController.dispose();
+    _renewalDateController.dispose();
+    _isSavingNotifier.dispose();
+    _isDeletingNotifier.dispose();
+  }
+
+  Future<void> _selectDate(TextEditingController controller) async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
       context: context,
       initialDate: now,
       firstDate: DateTime(now.year - 5),
       lastDate: DateTime(now.year + 5),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: const Color.fromRGBO(111, 86, 221, 1),
-            colorScheme: const ColorScheme.light(
-              primary: Color.fromRGBO(111, 86, 221, 1),
-            ),
-            buttonTheme: const ButtonThemeData(
-              textTheme: ButtonTextTheme.primary,
-            ),
-          ),
-          child: child!,
-        );
-      },
+      builder: (context, child) => _buildDatePickerTheme(child!),
     );
 
     if (picked != null) {
       setState(() {
-        controller.text = DateFormat('dd/MM/yyyy').format(picked);
+        controller.text = DateFormat(_dateFormat).format(picked);
       });
     }
   }
 
-  void format(String value) {
-    String formattedValue = CurrencyFormatter.formatInput(value);
-
+  void _formatCurrency(String value) {
+    final formattedValue = CurrencyFormatter.formatInput(value);
     if (formattedValue.isNotEmpty) {
       _valueController.value = TextEditingValue(
         text: formattedValue,
@@ -86,46 +129,54 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    if (!widget.newStreaming) {
-      _nameController.text = widget.streaming.streamingName;
-
-      if (widget.streaming.streamingValue != null) {
-        _valueController.text = CurrencyFormatter.format(
-          widget.streaming.streamingValue!,
+  dynamic _onPaymentMethodChanged(String? value) {
+    if (value != null) {
+      setState(() {
+        _selectedPaymentMethod = PaymentMethod.getPaymentMethodFromString(
+          value,
         );
-      }
-
-      if (widget.streaming.startsAt != null) {
-        _startsAtController.text = DateFormat(
-          'dd/MM/yyyy',
-        ).format(widget.streaming.startsAt!);
-      }
-
-      if (widget.streaming.renewalDate != null) {
-        _renewalDateController.text = DateFormat(
-          'dd/MM/yyyy',
-        ).format(widget.streaming.renewalDate!);
-      }
-
-      _selectedPaymentMethod = widget.streaming.paymentMethod;
-    } else {
-      _nameController.text = widget.streaming.streamingName;
+      });
     }
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _valueController.dispose();
-    _startsAtController.dispose();
-    _renewalDateController.dispose();
-    _isSavingNotifier.dispose();
-    _isCancelingNotifier.dispose();
-    super.dispose();
+  Future<void> _onSavePressed() async {
+    _isSavingNotifier.value = true;
+    final entity = _buildStreamingEntity();
+
+    if (widget.newStreaming) {
+      await _streamingCubit.addStreaming(entity);
+    } else {
+      await _streamingCubit.updateStreaming(entity);
+    }
+  }
+
+  Future<void> _onDeletePressed() async {
+    _isDeletingNotifier.value = true;
+    await _streamingCubit.deleteStreaming(widget.streaming.streamingId ?? '');
+  }
+
+  StreamingEntity _buildStreamingEntity() {
+    return StreamingEntity(
+      streamingId: widget.newStreaming ? null : widget.streaming.streamingId,
+      streamingName: _nameController.text,
+      streamingValue: CurrencyFormatter.parse(_valueController.text),
+      startsAt:
+          _parseDate(_startsAtController.text) ??
+          (widget.newStreaming ? null : widget.streaming.startsAt),
+      renewalDate:
+          _parseDate(_renewalDateController.text) ??
+          (widget.newStreaming ? null : widget.streaming.renewalDate),
+      paymentMethod: _selectedPaymentMethod ?? widget.streaming.paymentMethod,
+    );
+  }
+
+  DateTime? _parseDate(String dateText) {
+    if (dateText.isEmpty) return null;
+    try {
+      return DateFormat(_dateFormat).parse(dateText);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -133,355 +184,336 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              context.pop();
-            },
-            child: Padding(
-              padding: EdgeInsets.only(top: 12.h),
-              child: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Color.fromRGBO(111, 86, 221, 1),
-              ),
-            ),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 12.h),
-            child: Text(
-              widget.newStreaming == false
-                  ? strings.editSubscription
-                  : strings.addSubscription,
-              style: TextStyle(
-                fontSize: 20.sp,
-                color: const Color.fromRGBO(111, 86, 221, 1),
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ),
-          backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-          elevation: 0,
-        ),
-        body: BlocProvider(
-          create: (context) => _streamingCubit,
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.w,
-                    vertical: 16.h,
-                  ),
-                  child: Column(
-                    children: [
-                      if (widget.newStreaming == false)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                widget.streaming.streamingName,
-                                style: TextStyle(
-                                  fontSize: 24.sp,
-                                  color: const Color.fromRGBO(111, 86, 221, 1),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  widget.streaming.streamingValue != null
-                                      ? CurrencyFormatter.format(
-                                        widget.streaming.streamingValue!,
-                                      )
-                                      : '',
-                                  style: TextStyle(
-                                    fontSize: 24.sp,
-                                    color: const Color.fromRGBO(
-                                      111,
-                                      86,
-                                      221,
-                                      1,
-                                    ),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Text(
-                                  widget.streaming.renewalDate != null
-                                      ? DateFormat(
-                                        'dd/MM/yyyy',
-                                      ).format(widget.streaming.renewalDate!)
-                                      : '',
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: const Color.fromRGBO(77, 77, 97, 1),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      else
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Image.asset(widget.streaming.streamingImage!),
-                        ),
-                      CustomForm(
-                        hintText: strings.name,
-                        isPrefixHint: true,
-                        controller: _nameController,
-                      ),
-                      CustomForm(
-                        hintText: strings.value,
-                        isPrefixHint: true,
-                        controller: _valueController,
-                        onChanged: (value) => format(value),
-                        keyboardType: TextInputType.number,
-                      ),
-                      CustomForm(
-                        hintText: strings.startsAt,
-                        isPrefixHint: true,
-                        suffixIcon: const Icon(Icons.calendar_month),
-                        controller: _startsAtController,
-                        isDatePicker: true,
-                        onTap: () => _selectDate(context, _startsAtController),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 16.h),
-                        child: CustomForm(
-                          hintText: strings.renewAt,
-                          isPrefixHint: true,
-                          suffixIcon: const Icon(Icons.calendar_month),
-                          controller: _renewalDateController,
-                          isDatePicker: true,
-                          onTap:
-                              () =>
-                                  _selectDate(context, _renewalDateController),
-                        ),
-                      ),
-                      DropdownWidget(
-                        isPaymentMethod: true,
-                        options: [
-                          strings.debitCard,
-                          strings.creditCard,
-                          strings.pix,
-                          strings.bankSlip,
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedPaymentMethod =
-                                PaymentMethod.getPaymentMethodFromString(value);
-                          });
-                        },
-                        selectedValue: PaymentMethod.getStringFromPaymentMethod(
-                          _selectedPaymentMethod,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    BlocConsumer<
-                      StreamingManagementCubit,
-                      StreamingManagementState
-                    >(
-                      listener: (context, state) {
-                        if (state.isFailure) {
-                          _isSavingNotifier.value = false;
-                          _isCancelingNotifier.value = false;
-                          showActionSnackBarError(context);
-                        }
-                        if (state.isSuccess) {
-                          _isSavingNotifier.value = false;
-                          _isCancelingNotifier.value = false;
-                          context.pushRoute(HomePageRoute());
-                        }
-                      },
-                      builder: (context, state) {
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 24.h,
-                                right: 24.h,
-                                bottom: widget.newStreaming ? 32.h : 16.h,
-                                top: 32.h,
-                              ),
-                              child: ValueListenableBuilder<bool>(
-                                valueListenable: _isSavingNotifier,
-                                builder: (context, isSaving, child) {
-                                  return isSaving
-                                      ? const LoadingButton(isLarge: true)
-                                      : CustomButton(
-                                        isLarge: true,
-                                        textButton:
-                                            widget.newStreaming
-                                                ? strings.addSubscription
-                                                : strings.save,
-                                        onPressed: () {
-                                          _isSavingNotifier.value = true;
-                                          widget.newStreaming
-                                              ? _streamingCubit.addStreaming(
-                                                StreamingEntity(
-                                                  streamingName:
-                                                      _nameController.text,
-                                                  streamingValue:
-                                                      CurrencyFormatter.parse(
-                                                        _valueController.text,
-                                                      ),
-                                                  startsAt:
-                                                      _startsAtController
-                                                              .text
-                                                              .isNotEmpty
-                                                          ? DateFormat(
-                                                            'dd/MM/yyyy',
-                                                          ).parse(
-                                                            _startsAtController
-                                                                .text,
-                                                          )
-                                                          : null,
-                                                  renewalDate:
-                                                      _renewalDateController
-                                                              .text
-                                                              .isNotEmpty
-                                                          ? DateFormat(
-                                                            'dd/MM/yyyy',
-                                                          ).parse(
-                                                            _renewalDateController
-                                                                .text,
-                                                          )
-                                                          : null,
-                                                  paymentMethod:
-                                                      _selectedPaymentMethod,
-                                                ),
-                                              )
-                                              : _streamingCubit.updateStreaming(
-                                                StreamingEntity(
-                                                  streamingId:
-                                                      widget
-                                                          .streaming
-                                                          .streamingId,
-                                                  streamingName:
-                                                      _nameController.text,
-                                                  streamingValue:
-                                                      CurrencyFormatter.parse(
-                                                        _valueController.text,
-                                                      ),
-                                                  startsAt:
-                                                      _startsAtController
-                                                              .text
-                                                              .isNotEmpty
-                                                          ? DateFormat(
-                                                            'dd/MM/yyyy',
-                                                          ).parse(
-                                                            _startsAtController
-                                                                .text,
-                                                          )
-                                                          : widget
-                                                              .streaming
-                                                              .startsAt,
-                                                  renewalDate:
-                                                      _renewalDateController
-                                                              .text
-                                                              .isNotEmpty
-                                                          ? DateFormat(
-                                                            'dd/MM/yyyy',
-                                                          ).parse(
-                                                            _renewalDateController
-                                                                .text,
-                                                          )
-                                                          : widget
-                                                              .streaming
-                                                              .renewalDate,
-                                                  paymentMethod:
-                                                      _selectedPaymentMethod ??
-                                                      widget
-                                                          .streaming
-                                                          .paymentMethod,
-                                                ),
-                                              );
-                                        },
-                                      );
-                                },
-                              ),
-                            ),
-                            widget.newStreaming == false
-                                ? Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 24.h,
-                                    right: 24.h,
-                                    bottom: 32.h,
-                                  ),
-                                  child: ValueListenableBuilder(
-                                    valueListenable: _isCancelingNotifier,
-                                    builder: (context, isCanceling, child) {
-                                      return isCanceling
-                                          ? const LoadingButton(
-                                            isLarge: true,
-                                            buttonColor: Color.fromRGBO(
-                                              221,
-                                              86,
-                                              86,
-                                              1,
-                                            ),
-                                          )
-                                          : CustomButton(
-                                            isLarge: true,
-                                            textButton:
-                                                strings.cancelSubscription,
-                                            onPressed: () {
-                                              _isCancelingNotifier.value = true;
-                                              _streamingCubit.deleteStreaming(
-                                                widget.streaming.streamingId ??
-                                                    '',
-                                              );
-                                            },
-                                            buttonColor: const Color.fromRGBO(
-                                              221,
-                                              86,
-                                              86,
-                                              1,
-                                            ),
-                                          );
-                                    },
-                                  ),
-                                )
-                                : const SizedBox.shrink(),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        backgroundColor: _backgroundColor,
+        appBar: _buildAppBar(),
+        body: _buildBody(),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      leading: _buildBackButton(),
+      title: _buildAppBarTitle(),
+      backgroundColor: _backgroundColor,
+      elevation: 0,
+    );
+  }
+
+  Widget _buildBackButton() {
+    return GestureDetector(
+      onTap: () => context.pop(),
+      child: Padding(
+        padding: EdgeInsets.only(top: 12.h),
+        child: const Icon(Icons.arrow_back_ios_new, color: _primaryColor),
+      ),
+    );
+  }
+
+  Widget _buildAppBarTitle() {
+    return Padding(
+      padding: EdgeInsets.only(top: 12.h),
+      child: Text(
+        widget.newStreaming
+            ? strings.addSubscription
+            : strings.editSubscription,
+        style: TextStyle(
+          fontSize: 20.sp,
+          color: _primaryColor,
+          fontWeight: FontWeight.normal,
         ),
       ),
     );
   }
 
-  void showActionSnackBarError(BuildContext context) {
+  Widget _buildBody() {
+    return BlocProvider(
+      create: (context) => _streamingCubit,
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+              child: Column(children: [_buildHeader(), _buildForm()]),
+            ),
+          ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: _buildActionButtons(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    if (widget.newStreaming) {
+      return _buildNewStreamingHeader();
+    } else {
+      return _buildEditStreamingHeader();
+    }
+  }
+
+  Widget _buildNewStreamingHeader() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child:
+          widget.streaming.streamingImage?.isNotEmpty == true
+              ? Image.asset(
+                widget.streaming.streamingImage!,
+                errorBuilder:
+                    (context, error, stackTrace) => _buildDefaultIcon(),
+              )
+              : _buildDefaultIcon(),
+    );
+  }
+
+  Widget _buildEditStreamingHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [_buildStreamingName(), _buildStreamingInfo()],
+    );
+  }
+
+  Widget _buildStreamingName() {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Text(
+        widget.streaming.streamingName,
+        style: TextStyle(
+          fontSize: 24.sp,
+          color: _primaryColor,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStreamingInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        if (widget.streaming.streamingValue != null)
+          Text(
+            CurrencyFormatter.format(widget.streaming.streamingValue!),
+            style: TextStyle(
+              fontSize: 24.sp,
+              color: _primaryColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        if (widget.streaming.renewalDate != null)
+          Text(
+            DateFormat(_dateFormat).format(widget.streaming.renewalDate!),
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: const Color.fromRGBO(77, 77, 97, 1),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildDefaultIcon() {
+    return Icon(Icons.web_asset, size: 64.sp, color: _primaryColor);
+  }
+
+  Widget _buildForm() {
+    return Column(
+      children: [
+        CustomForm(
+          hintText: strings.name,
+          isPrefixHint: true,
+          controller: _nameController,
+        ),
+        CustomForm(
+          hintText: strings.value,
+          isPrefixHint: true,
+          controller: _valueController,
+          onChanged: _formatCurrency,
+          keyboardType: TextInputType.number,
+        ),
+        CustomForm(
+          hintText: strings.startsAt,
+          isPrefixHint: true,
+          suffixIcon: const Icon(Icons.calendar_month),
+          controller: _startsAtController,
+          isDatePicker: true,
+          onTap: () => _selectDate(_startsAtController),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 16.h),
+          child: CustomForm(
+            hintText: strings.renewAt,
+            isPrefixHint: true,
+            suffixIcon: const Icon(Icons.calendar_month),
+            controller: _renewalDateController,
+            isDatePicker: true,
+            onTap: () => _selectDate(_renewalDateController),
+          ),
+        ),
+        _buildPaymentMethodDropdown(),
+      ],
+    );
+  }
+
+  Widget _buildPaymentMethodDropdown() {
+    return DropdownWidget(
+      isPaymentMethod: true,
+      options: [
+        strings.debitCard,
+        strings.creditCard,
+        strings.pix,
+        strings.bankSlip,
+      ],
+      onChanged: _onPaymentMethodChanged,
+      selectedValue: PaymentMethod.getStringFromPaymentMethod(
+        _selectedPaymentMethod,
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        BlocConsumer<StreamingManagementCubit, StreamingManagementState>(
+          listener: _handleBlocState,
+          builder:
+              (context, state) => Column(
+                children: [
+                  _buildSaveButton(),
+                  if (!widget.newStreaming) _buildDeleteButton(),
+                ],
+              ),
+        ),
+      ],
+    );
+  }
+
+  void _handleBlocState(BuildContext context, StreamingManagementState state) {
+    if (state.isFailure) {
+      _resetLoadingStates();
+      String errorMessage;
+      if (_isDeletingNotifier.value) {
+        errorMessage = strings.errorToCancelSubscription;
+      } else if (widget.newStreaming) {
+        errorMessage = strings.errorToCreateSubscription;
+      } else {
+        errorMessage = strings.errorToUpdateSubscription;
+      }
+
+      _showErrorSnackBar(errorMessage);
+    }
+    if (state.isSuccess) {
+      _resetLoadingStates();
+      String successMessage;
+      if (_isDeletingNotifier.value) {
+        successMessage = strings.subscriptionUpdated;
+      } else if (widget.newStreaming) {
+        successMessage = strings.subscriptionCreated;
+      } else {
+        successMessage = strings.subscriptionCanceled;
+      }
+
+      _showSuccessSnackBar(successMessage);
+      context.pushRoute(HomePageRoute());
+    }
+  }
+
+  void _resetLoadingStates() {
+    _isSavingNotifier.value = false;
+    _isDeletingNotifier.value = false;
+  }
+
+  Widget _buildSaveButton() {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 24.h,
+        right: 24.h,
+        bottom: widget.newStreaming ? 32.h : 16.h,
+        top: 32.h,
+      ),
+      child: ValueListenableBuilder<bool>(
+        valueListenable: _isSavingNotifier,
+        builder: (context, isSaving, child) {
+          return isSaving
+              ? const LoadingButton(isLarge: true)
+              : CustomButton(
+                isLarge: true,
+                textButton:
+                    widget.newStreaming
+                        ? strings.addSubscription
+                        : strings.save,
+                onPressed: _onSavePressed,
+              );
+        },
+      ),
+    );
+  }
+
+  Widget _buildDeleteButton() {
+    return Padding(
+      padding: EdgeInsets.only(left: 24.h, right: 24.h, bottom: 32.h),
+      child: ValueListenableBuilder<bool>(
+        valueListenable: _isDeletingNotifier,
+        builder: (context, isDeleting, child) {
+          return isDeleting
+              ? const LoadingButton(isLarge: true, buttonColor: _deleteColor)
+              : CustomButton(
+                isLarge: true,
+                textButton: strings.cancelSubscription,
+                onPressed: _onDeletePressed,
+                buttonColor: _deleteColor,
+              );
+        },
+      ),
+    );
+  }
+
+  Widget _buildDatePickerTheme(Widget child) {
+    return Theme(
+      data: ThemeData.light().copyWith(
+        primaryColor: _primaryColor,
+        colorScheme: const ColorScheme.light(primary: _primaryColor),
+        buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+      ),
+      child: child,
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
     final snackBar = SnackBar(
+      margin: EdgeInsets.only(bottom: 16.h, left: 16.w, right: 16.w),
+      behavior: SnackBarBehavior.floating,
       content: Text(
-        strings.somethingWentWrong,
+        message,
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
       ),
-      backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
+      backgroundColor: _deleteColor,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _showSuccessSnackBar(String message) {
+    final snackBar = SnackBar(
+      margin: EdgeInsets.only(bottom: 16.h, left: 16.w, right: 16.w),
+      behavior: SnackBarBehavior.floating,
+      content: Text(
+        message,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+      ),
+      duration: const Duration(seconds: 2),
+      backgroundColor: const Color.fromARGB(255, 39, 231, 58),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

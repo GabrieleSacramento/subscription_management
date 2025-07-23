@@ -47,10 +47,8 @@ Color getRenewalColor(DateTime renewalDate) {
 
   if (daysUntil < 0) {
     return Colors.red; // Vencido
-  } else if (daysUntil <= 3) {
+  } else if (daysUntil <= 3 || daysUntil <= 7) {
     return const Color.fromARGB(255, 199, 124, 10); // Urgente (3 dias ou menos)
-  } else if (daysUntil <= 7) {
-    return const Color.fromARGB(255, 197, 150, 11); // Atenção (7 dias ou menos)
   } else {
     return const Color.fromRGBO(77, 77, 97, 1); // Normal
   }
