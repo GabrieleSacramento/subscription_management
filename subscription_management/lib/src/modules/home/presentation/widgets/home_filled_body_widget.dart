@@ -25,6 +25,108 @@ class _HomeFilledBodyWidgetState extends State<HomeFilledBodyWidget> {
   final strings = SubscriptionsManagementStrings();
   final _getStreamingCubit = GetIt.I.get<StreamingManagementCubit>();
 
+  double _calculateTotalSpent(List<StreamingEntity> streamings) {
+    return streamings.fold(
+      0.0,
+      (total, streaming) => total + (streaming.streamingValue ?? 0.0),
+    );
+  }
+
+  Widget _buildStreamingItem(StreamingEntity streaming) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 2.h),
+      child: MySubscriptionInfoWidget(
+        onTap: () {
+          context.pushRoute(
+            StreamingManagementPageRoute(
+              streaming: streaming,
+              newStreaming: false,
+            ),
+          );
+        },
+
+        streamingServiceName: streaming.streamingName,
+        renewalDate:
+            streaming.renewalDate != null
+                ? formatRenewalDate(streaming.renewalDate!)
+                : 'Data não definida',
+        subscriptionPrice: streaming.streamingValue,
+        seeDetails: true,
+        renewalColor:
+            streaming.renewalDate != null
+                ? getRenewalColor(streaming.renewalDate!)
+                : Colors.grey,
+      ),
+    );
+  }
+
+  Widget _buildTotalSpentCard(StreamingManagementState state) {
+    final totalSpent = state.when(
+      onLoading: () => 0.0,
+      onFailure: (error) => 0.0,
+      onSuccess: (streamings) => _calculateTotalSpent(streamings),
+    );
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 32.h),
+      child: ValueSpentInformationCard(totalSpent: totalSpent),
+    );
+  }
+
+  Widget _buildSectionTitle() {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Text(
+        strings.mySubscriptions,
+        style: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.bold,
+          color: const Color.fromRGBO(111, 86, 221, 1),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStreamingsList(StreamingManagementState state) {
+    return state.when(
+      onLoading:
+          () => const Center(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: CircularProgressIndicator(
+                color: Color.fromRGBO(111, 86, 221, 1),
+              ),
+            ),
+          ),
+      onFailure:
+          (error) => Center(
+            child: Text(
+              'Erro: $error',
+              style: TextStyle(fontSize: 14.sp, color: Colors.red),
+            ),
+          ),
+      onSuccess: (streamings) {
+        if (streamings.isEmpty) {
+          return Center(
+            child: Text(
+              strings.noSubscriptionsFound,
+              style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.only(top: 8.h, bottom: 72.h),
+          itemCount: streamings.length,
+          itemBuilder:
+              (context, index) => _buildStreamingItem(streamings[index]),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -33,85 +135,14 @@ class _HomeFilledBodyWidgetState extends State<HomeFilledBodyWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 32.h),
-              child: const ValueSpentInformationCard(totalSpent: 55.90),
+            BlocBuilder<StreamingManagementCubit, StreamingManagementState>(
+              builder: (context, state) => _buildTotalSpentCard(state),
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                strings.mySubscriptions,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromRGBO(111, 86, 221, 1),
-                ),
-              ),
-            ),
+
+            _buildSectionTitle(),
 
             BlocBuilder<StreamingManagementCubit, StreamingManagementState>(
-              builder: (context, state) {
-                return state.when(
-                  onLoading:
-                      () => const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: CircularProgressIndicator(
-                            color: Color.fromRGBO(111, 86, 221, 1),
-                          ),
-                        ),
-                      ),
-                  onFailure:
-                      (error) => Center(
-                        child: Text(
-                          'Erro: $error',
-                          style: TextStyle(fontSize: 14.sp, color: Colors.red),
-                        ),
-                      ),
-
-                  onSuccess: (streamings) {
-                    if (streamings.isEmpty) {
-                      return Center(
-                        child: Text(
-                          strings.noSubscriptionsFound,
-                          style: TextStyle(fontSize: 14.sp, color: Colors.grey),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.only(top: 8.h, bottom: 72.h),
-                      itemCount: streamings.length,
-                      itemBuilder: (context, index) {
-                        final streaming = streamings[index];
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 2.h),
-                          child: MySubscriptionInfoWidget(
-                            onTap: () {
-                              context.pushRoute(
-                                StreamingManagementPageRoute(
-                                  streaming: streaming,
-                                  newStreaming: false,
-                                ),
-                              );
-                            },
-
-                            streamingServiceName: streaming.streamingName,
-                            renewalDate:
-                                streaming.renewalDate != null
-                                    ? 'Renova em ${getDaysUntilRenewal(streaming.renewalDate!)} dias'
-                                    : 'Data não definida',
-                            subscriptionPrice: streaming.streamingValue,
-                            seeDetails: true,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
+              builder: (context, state) => _buildStreamingsList(state),
             ),
           ],
         ),

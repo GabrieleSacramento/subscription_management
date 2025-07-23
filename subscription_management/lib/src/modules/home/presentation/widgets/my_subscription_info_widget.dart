@@ -9,6 +9,7 @@ class MySubscriptionInfoWidget extends StatelessWidget {
   final num? subscriptionPrice;
   final bool seeDetails;
   final Function() onTap;
+  final Color? renewalColor;
   const MySubscriptionInfoWidget({
     super.key,
     required this.streamingServiceName,
@@ -17,6 +18,7 @@ class MySubscriptionInfoWidget extends StatelessWidget {
     this.seeDetails = false,
     required this.onTap,
     this.streamingServiceImage,
+    this.renewalColor,
   });
 
   @override
@@ -88,7 +90,7 @@ class MySubscriptionInfoWidget extends StatelessWidget {
                           renewalDate!,
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: const Color.fromRGBO(77, 77, 97, 1),
+                            color: renewalColor,
                           ),
                         ),
                       ),
