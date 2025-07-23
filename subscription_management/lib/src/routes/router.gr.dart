@@ -11,59 +11,6 @@
 part of 'router.dart';
 
 /// generated route for
-/// [AddNewStreamingPage]
-class StreamingManagementPageRoute
-    extends PageRouteInfo<StreamingManagementPageRouteArgs> {
-  StreamingManagementPageRoute({
-    Key? key,
-    required bool newStreaming,
-    required StreamingEntity streaming,
-    List<PageRouteInfo>? children,
-  }) : super(
-         StreamingManagementPageRoute.name,
-         args: StreamingManagementPageRouteArgs(
-           key: key,
-           newStreaming: newStreaming,
-           streaming: streaming,
-         ),
-         initialChildren: children,
-       );
-
-  static const String name = 'StreamingManagementPageRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<StreamingManagementPageRouteArgs>();
-      return AddNewStreamingPage(
-        key: args.key,
-        newStreaming: args.newStreaming,
-        streaming: args.streaming,
-      );
-    },
-  );
-}
-
-class StreamingManagementPageRouteArgs {
-  const StreamingManagementPageRouteArgs({
-    this.key,
-    required this.newStreaming,
-    required this.streaming,
-  });
-
-  final Key? key;
-
-  final bool newStreaming;
-
-  final StreamingEntity streaming;
-
-  @override
-  String toString() {
-    return 'StreamingManagementPageRouteArgs{key: $key, newStreaming: $newStreaming, streaming: $streaming}';
-  }
-}
-
-/// generated route for
 /// [CostumizeStreamingPage]
 class CostumizeStreamingPageRoute extends PageRouteInfo<void> {
   const CostumizeStreamingPageRoute({List<PageRouteInfo>? children})
@@ -216,4 +163,57 @@ class SplashScreenRoute extends PageRouteInfo<void> {
       return const SplashScreen();
     },
   );
+}
+
+/// generated route for
+/// [StreamingManagementPage]
+class StreamingManagementPageRoute
+    extends PageRouteInfo<StreamingManagementPageRouteArgs> {
+  StreamingManagementPageRoute({
+    Key? key,
+    required bool newStreaming,
+    required StreamingEntity streaming,
+    List<PageRouteInfo>? children,
+  }) : super(
+         StreamingManagementPageRoute.name,
+         args: StreamingManagementPageRouteArgs(
+           key: key,
+           newStreaming: newStreaming,
+           streaming: streaming,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'StreamingManagementPageRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<StreamingManagementPageRouteArgs>();
+      return StreamingManagementPage(
+        key: args.key,
+        newStreaming: args.newStreaming,
+        streaming: args.streaming,
+      );
+    },
+  );
+}
+
+class StreamingManagementPageRouteArgs {
+  const StreamingManagementPageRouteArgs({
+    this.key,
+    required this.newStreaming,
+    required this.streaming,
+  });
+
+  final Key? key;
+
+  final bool newStreaming;
+
+  final StreamingEntity streaming;
+
+  @override
+  String toString() {
+    return 'StreamingManagementPageRouteArgs{key: $key, newStreaming: $newStreaming, streaming: $streaming}';
+  }
 }

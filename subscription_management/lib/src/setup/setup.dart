@@ -10,12 +10,16 @@ import 'package:subscription_management/src/modules/login/infra/use_cases/user_a
 import 'package:subscription_management/src/modules/login/presentation/cubit/user_authentication_cubit.dart';
 import 'package:subscription_management/src/modules/streaming_management/domain/repositories/streaming_repository.dart';
 import 'package:subscription_management/src/modules/streaming_management/domain/use_cases/add_streaming_use_case.dart';
+import 'package:subscription_management/src/modules/streaming_management/domain/use_cases/delete_streaming_use_case.dart';
 import 'package:subscription_management/src/modules/streaming_management/domain/use_cases/get_streaming_use_case.dart';
+import 'package:subscription_management/src/modules/streaming_management/domain/use_cases/update_streaming_use_case.dart';
 import 'package:subscription_management/src/modules/streaming_management/external/datasources/streaming_datasource_impl.dart';
 import 'package:subscription_management/src/modules/streaming_management/infra/datasources/streaming_datasource.dart';
 import 'package:subscription_management/src/modules/streaming_management/infra/repositories/streaming_repository_impl.dart';
 import 'package:subscription_management/src/modules/streaming_management/infra/use_cases/add_message_use_case_impl.dart';
+import 'package:subscription_management/src/modules/streaming_management/infra/use_cases/delete_streaming_use_case_impl.dart';
 import 'package:subscription_management/src/modules/streaming_management/infra/use_cases/get_message_use_case_impl.dart';
+import 'package:subscription_management/src/modules/streaming_management/infra/use_cases/update_streaming_use_case_impl.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/cubit/streaming_management_cubit.dart';
 
 Dio dio = Dio();
@@ -67,6 +71,16 @@ void setupUseCases() {
     () =>
         GetStreamingUseCaseImpl(repository: GetIt.I.get<StreamingRepository>()),
   );
+  setup.registerFactory<UpdateStreamingUseCase>(
+    () => UpdateStreamingUseCaseImpl(
+      repository: GetIt.I.get<StreamingRepository>(),
+    ),
+  );
+  setup.registerFactory<DeleteStreamingUseCase>(
+    () => DeleteStreamingUseCaseImpl(
+      repository: GetIt.I.get<StreamingRepository>(),
+    ),
+  );
 }
 
 void setupCubits() {
@@ -79,6 +93,8 @@ void setupCubits() {
     () => StreamingManagementCubit(
       addStreamingUseCase: GetIt.I.get<AddStreamingUseCase>(),
       getStreamingUseCase: GetIt.I.get<GetStreamingUseCase>(),
+      updateStreamingUseCase: GetIt.I.get<UpdateStreamingUseCase>(),
+      deleteStreamingUseCase: GetIt.I.get<DeleteStreamingUseCase>(),
     ),
   );
 }

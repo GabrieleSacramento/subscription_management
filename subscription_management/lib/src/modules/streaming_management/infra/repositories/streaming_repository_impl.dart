@@ -16,4 +16,14 @@ class StreamingRepositoryImpl implements StreamingRepository {
   Stream<List<StreamingEntity>> getStreamings() {
     return dataSource.getStreaming();
   }
+
+  @override
+  Future<void> deleteStreaming(String streamingId) {
+    return dataSource.deleteStreaming(streamingId);
+  }
+
+  @override
+  Future<void> updateStreaming(StreamingEntity streaming) async {
+    return await dataSource.updateStreaming(streaming);
+  }
 }

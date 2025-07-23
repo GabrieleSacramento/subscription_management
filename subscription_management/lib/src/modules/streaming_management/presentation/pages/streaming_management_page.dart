@@ -16,26 +16,29 @@ import 'package:subscription_management/src/utils/app_strings.dart';
 import 'package:subscription_management/src/utils/formatters.dart';
 
 @RoutePage(name: 'StreamingManagementPageRoute')
-class AddNewStreamingPage extends StatefulWidget {
+class StreamingManagementPage extends StatefulWidget {
   final StreamingEntity streaming;
   final bool newStreaming;
-  const AddNewStreamingPage({
+  const StreamingManagementPage({
     super.key,
     required this.newStreaming,
     required this.streaming,
   });
 
   @override
-  State<AddNewStreamingPage> createState() => _AddNewStreamingPageState();
+  State<StreamingManagementPage> createState() =>
+      _StreamingManagementPageState();
 }
 
-class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
+class _StreamingManagementPageState extends State<StreamingManagementPage> {
   final strings = SubscriptionsManagementStrings();
   final TextEditingController _startsAtController = TextEditingController();
   final TextEditingController _renewalDateController = TextEditingController();
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final _addStreamingCubit = GetIt.I.get<StreamingManagementCubit>();
+  final _streamingCubit = GetIt.I.get<StreamingManagementCubit>();
+  final ValueNotifier<bool> _isSavingNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isCancelingNotifier = ValueNotifier<bool>(false);
   PaymentMethod? _selectedPaymentMethod;
   Future<void> _selectDate(
     BuildContext context,
@@ -76,9 +79,53 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
     if (formattedValue.isNotEmpty) {
       _valueController.value = TextEditingValue(
         text: formattedValue,
-        selection: TextSelection.collapsed(offset: formattedValue.length),
+        selection: TextSelection.collapsed(
+          offset: formattedValue.length.clamp(0, formattedValue.length),
+        ),
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (!widget.newStreaming) {
+      _nameController.text = widget.streaming.streamingName;
+
+      if (widget.streaming.streamingValue != null) {
+        _valueController.text = CurrencyFormatter.format(
+          widget.streaming.streamingValue!,
+        );
+      }
+
+      if (widget.streaming.startsAt != null) {
+        _startsAtController.text = DateFormat(
+          'dd/MM/yyyy',
+        ).format(widget.streaming.startsAt!);
+      }
+
+      if (widget.streaming.renewalDate != null) {
+        _renewalDateController.text = DateFormat(
+          'dd/MM/yyyy',
+        ).format(widget.streaming.renewalDate!);
+      }
+
+      _selectedPaymentMethod = widget.streaming.paymentMethod;
+    } else {
+      _nameController.text = widget.streaming.streamingName;
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _valueController.dispose();
+    _startsAtController.dispose();
+    _renewalDateController.dispose();
+    _isSavingNotifier.dispose();
+    _isCancelingNotifier.dispose();
+    super.dispose();
   }
 
   @override
@@ -117,7 +164,7 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
           elevation: 0,
         ),
         body: BlocProvider(
-          create: (context) => _addStreamingCubit..addStreaming,
+          create: (context) => _streamingCubit,
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -128,15 +175,31 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                   ),
                   child: Column(
                     children: [
-                      widget.newStreaming == false
-                          ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  widget.streaming.streamingName,
+                      if (widget.newStreaming == false)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                widget.streaming.streamingName,
+                                style: TextStyle(
+                                  fontSize: 24.sp,
+                                  color: const Color.fromRGBO(111, 86, 221, 1),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  widget.streaming.streamingValue != null
+                                      ? CurrencyFormatter.format(
+                                        widget.streaming.streamingValue!,
+                                      )
+                                      : '',
                                   style: TextStyle(
                                     fontSize: 24.sp,
                                     color: const Color.fromRGBO(
@@ -148,69 +211,35 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    widget.streaming.streamingValue != null
-                                        ? CurrencyFormatter.format(
-                                          widget.streaming.streamingValue!,
-                                        )
-                                        : '',
-                                    style: TextStyle(
-                                      fontSize: 24.sp,
-                                      color: const Color.fromRGBO(
-                                        111,
-                                        86,
-                                        221,
-                                        1,
-                                      ),
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                Text(
+                                  widget.streaming.renewalDate != null
+                                      ? DateFormat(
+                                        'dd/MM/yyyy',
+                                      ).format(widget.streaming.renewalDate!)
+                                      : '',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: const Color.fromRGBO(77, 77, 97, 1),
                                   ),
-                                  Text(
-                                    widget.streaming.renewalDate != null
-                                        ? DateFormat(
-                                          'dd/MM/yyyy',
-                                        ).format(widget.streaming.renewalDate!)
-                                        : '',
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      color: const Color.fromRGBO(
-                                        77,
-                                        77,
-                                        97,
-                                        1,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                          : const SizedBox.shrink(),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      else
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(widget.streaming.streamingImage!),
+                        ),
                       CustomForm(
                         hintText: strings.name,
                         isPrefixHint: true,
-                        controller:
-                            widget.streaming.streamingName != ''
-                                ? TextEditingController(
-                                  text: widget.streaming.streamingName,
-                                )
-                                : _nameController,
+                        controller: _nameController,
                       ),
                       CustomForm(
                         hintText: strings.value,
                         isPrefixHint: true,
-                        controller:
-                            widget.streaming.streamingValue != null
-                                ? TextEditingController(
-                                  text: CurrencyFormatter.format(
-                                    widget.streaming.streamingValue!,
-                                  ),
-                                )
-                                : _valueController,
+                        controller: _valueController,
                         onChanged: (value) => format(value),
                         keyboardType: TextInputType.number,
                       ),
@@ -268,82 +297,170 @@ class _AddNewStreamingPageState extends State<AddNewStreamingPage> {
                     >(
                       listener: (context, state) {
                         if (state.isFailure) {
+                          _isSavingNotifier.value = false;
+                          _isCancelingNotifier.value = false;
                           showActionSnackBarError(context);
                         }
                         if (state.isSuccess) {
+                          _isSavingNotifier.value = false;
+                          _isCancelingNotifier.value = false;
                           context.pushRoute(HomePageRoute());
                         }
                       },
                       builder: (context, state) {
-                        if (state.isLoading) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: 24.h,
-                              right: 24.h,
-                              bottom: widget.newStreaming ? 32.h : 16.h,
-                              top: 32.h,
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: 24.h,
+                                right: 24.h,
+                                bottom: widget.newStreaming ? 32.h : 16.h,
+                                top: 32.h,
+                              ),
+                              child: ValueListenableBuilder<bool>(
+                                valueListenable: _isSavingNotifier,
+                                builder: (context, isSaving, child) {
+                                  return isSaving
+                                      ? const LoadingButton(isLarge: true)
+                                      : CustomButton(
+                                        isLarge: true,
+                                        textButton:
+                                            widget.newStreaming
+                                                ? strings.addSubscription
+                                                : strings.save,
+                                        onPressed: () {
+                                          _isSavingNotifier.value = true;
+                                          widget.newStreaming
+                                              ? _streamingCubit.addStreaming(
+                                                StreamingEntity(
+                                                  streamingName:
+                                                      _nameController.text,
+                                                  streamingValue:
+                                                      CurrencyFormatter.parse(
+                                                        _valueController.text,
+                                                      ),
+                                                  startsAt:
+                                                      _startsAtController
+                                                              .text
+                                                              .isNotEmpty
+                                                          ? DateFormat(
+                                                            'dd/MM/yyyy',
+                                                          ).parse(
+                                                            _startsAtController
+                                                                .text,
+                                                          )
+                                                          : null,
+                                                  renewalDate:
+                                                      _renewalDateController
+                                                              .text
+                                                              .isNotEmpty
+                                                          ? DateFormat(
+                                                            'dd/MM/yyyy',
+                                                          ).parse(
+                                                            _renewalDateController
+                                                                .text,
+                                                          )
+                                                          : null,
+                                                  paymentMethod:
+                                                      _selectedPaymentMethod,
+                                                ),
+                                              )
+                                              : _streamingCubit.updateStreaming(
+                                                StreamingEntity(
+                                                  streamingId:
+                                                      widget
+                                                          .streaming
+                                                          .streamingId,
+                                                  streamingName:
+                                                      _nameController.text,
+                                                  streamingValue:
+                                                      CurrencyFormatter.parse(
+                                                        _valueController.text,
+                                                      ),
+                                                  startsAt:
+                                                      _startsAtController
+                                                              .text
+                                                              .isNotEmpty
+                                                          ? DateFormat(
+                                                            'dd/MM/yyyy',
+                                                          ).parse(
+                                                            _startsAtController
+                                                                .text,
+                                                          )
+                                                          : widget
+                                                              .streaming
+                                                              .startsAt,
+                                                  renewalDate:
+                                                      _renewalDateController
+                                                              .text
+                                                              .isNotEmpty
+                                                          ? DateFormat(
+                                                            'dd/MM/yyyy',
+                                                          ).parse(
+                                                            _renewalDateController
+                                                                .text,
+                                                          )
+                                                          : widget
+                                                              .streaming
+                                                              .renewalDate,
+                                                  paymentMethod:
+                                                      _selectedPaymentMethod ??
+                                                      widget
+                                                          .streaming
+                                                          .paymentMethod,
+                                                ),
+                                              );
+                                        },
+                                      );
+                                },
+                              ),
                             ),
-                            child: const LoadingButton(isLarge: true),
-                          );
-                        }
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            left: 24.h,
-                            right: 24.h,
-                            bottom: widget.newStreaming ? 32.h : 16.h,
-                            top: 32.h,
-                          ),
-                          child: CustomButton(
-                            isLarge: true,
-                            textButton:
-                                widget.newStreaming
-                                    ? strings.addSubscription
-                                    : strings.save,
-                            onPressed: () {
-                              _addStreamingCubit.addStreaming(
-                                StreamingEntity(
-                                  streamingName:
-                                      widget.streaming.streamingName != ''
-                                          ? widget.streaming.streamingName
-                                          : _nameController.text,
-                                  streamingValue: CurrencyFormatter.parse(
-                                    _valueController.text,
+                            widget.newStreaming == false
+                                ? Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 24.h,
+                                    right: 24.h,
+                                    bottom: 32.h,
                                   ),
-                                  startsAt:
-                                      _startsAtController.text.isNotEmpty
-                                          ? DateFormat(
-                                            'dd/MM/yyyy',
-                                          ).parse(_startsAtController.text)
-                                          : null,
-                                  renewalDate:
-                                      _renewalDateController.text.isNotEmpty
-                                          ? DateFormat(
-                                            'dd/MM/yyyy',
-                                          ).parse(_renewalDateController.text)
-                                          : null,
-                                  paymentMethod: _selectedPaymentMethod,
-                                ),
-                              );
-                            },
-                          ),
+                                  child: ValueListenableBuilder(
+                                    valueListenable: _isCancelingNotifier,
+                                    builder: (context, isCanceling, child) {
+                                      return isCanceling
+                                          ? const LoadingButton(
+                                            isLarge: true,
+                                            buttonColor: Color.fromRGBO(
+                                              221,
+                                              86,
+                                              86,
+                                              1,
+                                            ),
+                                          )
+                                          : CustomButton(
+                                            isLarge: true,
+                                            textButton:
+                                                strings.cancelSubscription,
+                                            onPressed: () {
+                                              _isCancelingNotifier.value = true;
+                                              _streamingCubit.deleteStreaming(
+                                                widget.streaming.streamingId ??
+                                                    '',
+                                              );
+                                            },
+                                            buttonColor: const Color.fromRGBO(
+                                              221,
+                                              86,
+                                              86,
+                                              1,
+                                            ),
+                                          );
+                                    },
+                                  ),
+                                )
+                                : const SizedBox.shrink(),
+                          ],
                         );
                       },
                     ),
-                    widget.newStreaming == false
-                        ? Padding(
-                          padding: EdgeInsets.only(
-                            left: 24.h,
-                            right: 24.h,
-                            bottom: 32.h,
-                          ),
-                          child: CustomButton(
-                            isLarge: true,
-                            textButton: strings.cancelSubscription,
-                            onPressed: () {},
-                            buttonColor: const Color.fromRGBO(221, 86, 86, 1),
-                          ),
-                        )
-                        : const SizedBox.shrink(),
                   ],
                 ),
               ),

@@ -18,8 +18,39 @@ class StreamingDataSourceImpl implements StreamingDataSource {
   Stream<List<StreamingEntity>> getStreaming() {
     return firestore.collection("streaming").snapshots().map((snapshot) {
       return snapshot.docs
-          .map((doc) => StreamingModel.fromJson(doc.data()).toEntity())
+          .map((doc) {
+            try {
+              final data = doc.data();
+              data['streamingId'] = doc.id;
+              return StreamingModel.fromJson(data).toEntity();
+            } catch (e) {
+              return null;
+            }
+          })
+          .whereType<StreamingEntity>()
           .toList();
     });
+  }
+
+  @override
+  Future<void> updateStreaming(StreamingEntity streaming) async {
+    if (streaming.streamingId == null || streaming.streamingId!.isEmpty) {
+      throw Exception('ID do streaming é obrigatório para atualização');
+    }
+
+    final streamingModel = StreamingModel.fromEntity(streaming);
+    final data = streamingModel.toJson();
+
+    data['updatedAt'] = FieldValue.serverTimestamp();
+
+    await firestore
+        .collection("streaming")
+        .doc(streaming.streamingId!)
+        .update(data);
+  }
+
+  @override
+  Future<void> deleteStreaming(String streamingId) async {
+    await firestore.collection("streaming").doc(streamingId).delete();
   }
 }
