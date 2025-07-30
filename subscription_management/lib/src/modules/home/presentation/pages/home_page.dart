@@ -41,8 +41,10 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _userName = widget.userName;
       });
+    } else {
+      final savedUserName = prefs.getString('userName_${widget.email}');
       setState(() {
-        _userName = prefs.getString('userName_${widget.email}');
+        _userName = savedUserName;
       });
     }
   }
