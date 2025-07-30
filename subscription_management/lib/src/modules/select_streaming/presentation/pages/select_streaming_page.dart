@@ -186,7 +186,13 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
                           return GestureDetector(
                             onTap: () {
                               context.pushRoute(
-                                const CostumizeStreamingPageRoute(),
+                                StreamingManagementPageRoute(
+                                  newStreaming: true,
+                                  streaming: const StreamingEntity(
+                                    streamingName: '',
+                                    streamingId: '',
+                                  ),
+                                ),
                               );
                             },
                             child: Row(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/home_filled_body_widget.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/settings_body.dart';
 import 'package:subscription_management/src/modules/login/presentation/cubit/user_authentication_cubit.dart';
@@ -12,8 +13,9 @@ import 'package:subscription_management/src/utils/app_strings.dart';
 @RoutePage(name: 'HomePageRoute')
 class HomePage extends StatefulWidget {
   final String? userName;
+  final String? email;
 
-  const HomePage({super.key, this.userName});
+  const HomePage({super.key, this.userName, this.email});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,6 +25,27 @@ class _HomePageState extends State<HomePage> {
   final _logoutCubit = GetIt.I.get<UserAuthenticationCubit>();
 
   final strings = SubscriptionsManagementStrings();
+  String? _userName;
+
+  @override
+  void initState() {
+    _loadUserName();
+    super.initState();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (widget.userName != null) {
+      await prefs.setString('userName_${widget.email}', widget.userName!);
+      setState(() {
+        _userName = widget.userName;
+      });
+      setState(() {
+        _userName = prefs.getString('userName_${widget.email}');
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
                 child: SettingsBody(
-                  userName: widget.userName,
+                  userName: _userName,
                   onLogout: () {
                     _logoutCubit.logout();
                   },
@@ -56,7 +79,7 @@ class _HomePageState extends State<HomePage> {
             title: Padding(
               padding: EdgeInsets.only(top: 8.h),
               child: Text(
-                widget.userName ?? strings.welcome,
+                _userName ?? strings.welcome,
                 style: TextStyle(
                   fontSize: 20.sp,
                   color: const Color.fromRGBO(111, 86, 221, 1),
@@ -84,7 +107,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
             elevation: 0,
           ),
-          body: HomeFilledBodyWidget(),
+          body: const HomeFilledBodyWidget(),
           floatingActionButton: SizedBox(
             width: 60.w,
             height: 60.h,

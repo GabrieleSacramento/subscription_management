@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:subscription_management/src/modules/home/presentation/widgets/home_empty_body_widget.dart';
 
 import 'package:subscription_management/src/modules/home/presentation/widgets/my_subscription_info_widget.dart';
 import 'package:subscription_management/src/modules/shared/widgets/value_spent_information_card.dart';
@@ -107,11 +108,9 @@ class _HomeFilledBodyWidgetState extends State<HomeFilledBodyWidget> {
           ),
       onSuccess: (streamings) {
         if (streamings.isEmpty) {
-          return Center(
-            child: Text(
-              strings.noSubscriptionsFound,
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey),
-            ),
+          return Padding(
+            padding: EdgeInsets.only(top: 32.h),
+            child: HomeEmptyBodyWidget(),
           );
         }
 

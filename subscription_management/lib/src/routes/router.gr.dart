@@ -29,12 +29,16 @@ class CostumizeStreamingPageRoute extends PageRouteInfo<void> {
 /// generated route for
 /// [HomePage]
 class HomePageRoute extends PageRouteInfo<HomePageRouteArgs> {
-  HomePageRoute({Key? key, String? userName, List<PageRouteInfo>? children})
-    : super(
-        HomePageRoute.name,
-        args: HomePageRouteArgs(key: key, userName: userName),
-        initialChildren: children,
-      );
+  HomePageRoute({
+    Key? key,
+    String? userName,
+    String? email,
+    List<PageRouteInfo>? children,
+  }) : super(
+         HomePageRoute.name,
+         args: HomePageRouteArgs(key: key, userName: userName, email: email),
+         initialChildren: children,
+       );
 
   static const String name = 'HomePageRoute';
 
@@ -44,21 +48,27 @@ class HomePageRoute extends PageRouteInfo<HomePageRouteArgs> {
       final args = data.argsAs<HomePageRouteArgs>(
         orElse: () => const HomePageRouteArgs(),
       );
-      return HomePage(key: args.key, userName: args.userName);
+      return HomePage(
+        key: args.key,
+        userName: args.userName,
+        email: args.email,
+      );
     },
   );
 }
 
 class HomePageRouteArgs {
-  const HomePageRouteArgs({this.key, this.userName});
+  const HomePageRouteArgs({this.key, this.userName, this.email});
 
   final Key? key;
 
   final String? userName;
 
+  final String? email;
+
   @override
   String toString() {
-    return 'HomePageRouteArgs{key: $key, userName: $userName}';
+    return 'HomePageRouteArgs{key: $key, userName: $userName, email: $email}';
   }
 }
 

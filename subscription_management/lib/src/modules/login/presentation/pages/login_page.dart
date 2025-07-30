@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isPasswordVisible = false;
 
-  _navigateToHomePage(String? userName) {
+  _navigateToHomePage(String? userName, String? email) {
     context.pushRoute(HomePageRoute(userName: userName));
   }
 
@@ -179,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                             userName = await _getUserName(email);
                           }
 
-                          _navigateToHomePage(userName);
+                          _navigateToHomePage(userName, email);
                           clearForm();
                         }
                       },

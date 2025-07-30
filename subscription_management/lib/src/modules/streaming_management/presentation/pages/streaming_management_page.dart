@@ -47,12 +47,14 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
 
   final _isSavingNotifier = ValueNotifier<bool>(false);
   final _isDeletingNotifier = ValueNotifier<bool>(false);
+  final _isFormValidNotifier = ValueNotifier<bool>(false);
   PaymentMethod? _selectedPaymentMethod;
 
   @override
   void initState() {
     super.initState();
     _initializeFields();
+    _setupFormValidation();
   }
 
   @override
@@ -98,6 +100,7 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
     _renewalDateController.dispose();
     _isSavingNotifier.dispose();
     _isDeletingNotifier.dispose();
+    _isFormValidNotifier.dispose();
   }
 
   Future<void> _selectDate(TextEditingController controller) async {
@@ -114,6 +117,7 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
       setState(() {
         controller.text = DateFormat(_dateFormat).format(picked);
       });
+      _validateForm();
     }
   }
 
@@ -129,6 +133,35 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
     }
   }
 
+  // ✅ Método para configurar listeners de validação
+  void _setupFormValidation() {
+    _nameController.addListener(_validateForm);
+    _valueController.addListener(_validateForm);
+    _startsAtController.addListener(_validateForm);
+    _renewalDateController.addListener(_validateForm);
+
+    // Validação inicial
+    _validateForm();
+  }
+
+  // ✅ Método para validar o formulário
+  void _validateForm() {
+    final isNameValid = _nameController.text.trim().isNotEmpty;
+    final isValueValid = _valueController.text.trim().isNotEmpty;
+    final isStartsAtValid = _startsAtController.text.trim().isNotEmpty;
+    final isRenewalDateValid = _renewalDateController.text.trim().isNotEmpty;
+    final isPaymentMethodValid = _selectedPaymentMethod != null;
+
+    final isFormValid =
+        isNameValid &&
+        isValueValid &&
+        isStartsAtValid &&
+        isRenewalDateValid &&
+        isPaymentMethodValid;
+
+    _isFormValidNotifier.value = isFormValid;
+  }
+
   dynamic _onPaymentMethodChanged(String? value) {
     if (value != null) {
       setState(() {
@@ -136,6 +169,7 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
           value,
         );
       });
+      _validateForm();
     }
   }
 
@@ -262,9 +296,9 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
               ? Image.asset(
                 widget.streaming.streamingImage!,
                 errorBuilder:
-                    (context, error, stackTrace) => _buildDefaultIcon(),
+                    (context, error, stackTrace) => const SizedBox.shrink(),
               )
-              : _buildDefaultIcon(),
+              : const SizedBox.shrink(),
     );
   }
 
@@ -315,10 +349,6 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
     );
   }
 
-  Widget _buildDefaultIcon() {
-    return Icon(Icons.web_asset, size: 64.sp, color: _primaryColor);
-  }
-
   Widget _buildForm() {
     return Column(
       children: [
@@ -361,12 +391,7 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
   Widget _buildPaymentMethodDropdown() {
     return DropdownWidget(
       isPaymentMethod: true,
-      options: [
-        strings.debitCard,
-        strings.creditCard,
-        strings.pix,
-        strings.bankSlip,
-      ],
+      options: [strings.debitCard, strings.creditCard, strings.pix],
       onChanged: _onPaymentMethodChanged,
       selectedValue: PaymentMethod.getStringFromPaymentMethod(
         _selectedPaymentMethod,
@@ -394,9 +419,11 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
 
   void _handleBlocState(BuildContext context, StreamingManagementState state) {
     if (state.isFailure) {
+      final wasDeleting = _isDeletingNotifier.value;
       _resetLoadingStates();
+
       String errorMessage;
-      if (_isDeletingNotifier.value) {
+      if (wasDeleting) {
         errorMessage = strings.errorToCancelSubscription;
       } else if (widget.newStreaming) {
         errorMessage = strings.errorToCreateSubscription;
@@ -407,14 +434,16 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
       _showErrorSnackBar(errorMessage);
     }
     if (state.isSuccess) {
+      final wasDeleting = _isDeletingNotifier.value;
       _resetLoadingStates();
+
       String successMessage;
-      if (_isDeletingNotifier.value) {
-        successMessage = strings.subscriptionUpdated;
+      if (wasDeleting) {
+        successMessage = strings.subscriptionCanceled;
       } else if (widget.newStreaming) {
         successMessage = strings.subscriptionCreated;
       } else {
-        successMessage = strings.subscriptionCanceled;
+        successMessage = strings.subscriptionUpdated;
       }
 
       _showSuccessSnackBar(successMessage);
@@ -438,16 +467,24 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
       child: ValueListenableBuilder<bool>(
         valueListenable: _isSavingNotifier,
         builder: (context, isSaving, child) {
-          return isSaving
-              ? const LoadingButton(isLarge: true)
-              : CustomButton(
+          if (isSaving) {
+            return const LoadingButton(isLarge: true);
+          }
+
+          return ValueListenableBuilder<bool>(
+            valueListenable: _isFormValidNotifier,
+            builder: (context, isFormValid, child) {
+              return CustomButton(
                 isLarge: true,
                 textButton:
                     widget.newStreaming
                         ? strings.addSubscription
                         : strings.save,
-                onPressed: _onSavePressed,
+                onPressed: () => isFormValid ? _onSavePressed() : null,
+                buttonColor: isFormValid ? _primaryColor : Colors.grey.shade400,
               );
+            },
+          );
         },
       ),
     );
@@ -495,7 +532,7 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
           color: Colors.white,
         ),
       ),
-      backgroundColor: _deleteColor,
+      backgroundColor: const Color.fromARGB(255, 194, 81, 81),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -513,7 +550,7 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
         ),
       ),
       duration: const Duration(seconds: 2),
-      backgroundColor: const Color.fromARGB(255, 39, 231, 58),
+      backgroundColor: const Color.fromARGB(255, 74, 183, 85),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
