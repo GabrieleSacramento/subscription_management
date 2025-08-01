@@ -13,8 +13,7 @@ class ValueSpentInformationCard extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-      width: double.infinity,
-      height: 110.h,
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(

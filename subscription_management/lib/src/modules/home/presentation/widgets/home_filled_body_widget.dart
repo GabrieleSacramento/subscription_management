@@ -70,7 +70,11 @@ class _HomeFilledBodyWidgetState extends State<HomeFilledBodyWidget> {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.h),
-      child: ValueSpentInformationCard(totalSpent: totalSpent),
+      child: Row(
+        children: [
+          Expanded(child: ValueSpentInformationCard(totalSpent: totalSpent)),
+        ],
+      ),
     );
   }
 

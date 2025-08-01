@@ -80,11 +80,14 @@ class _HomePageState extends State<HomePage> {
             scrolledUnderElevation: 0.1,
             title: Padding(
               padding: EdgeInsets.only(top: 8.h),
-              child: Text(
-                _userName ?? strings.welcome,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: const Color.fromRGBO(111, 86, 221, 1),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _userName ?? strings.welcome,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: const Color.fromRGBO(111, 86, 221, 1),
+                  ),
                 ),
               ),
             ),

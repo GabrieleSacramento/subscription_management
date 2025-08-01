@@ -107,7 +107,7 @@ class SettingsBody extends StatelessWidget {
         ),
       ),
       onTap: onTap,
-      contentPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 4.h),
+      contentPadding: EdgeInsets.symmetric(horizontal: 24.w),
     );
   }
 }
