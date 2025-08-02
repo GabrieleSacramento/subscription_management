@@ -13,6 +13,7 @@ import 'package:subscription_management/src/modules/shared/widgets/custom_form.d
 import 'package:subscription_management/src/modules/shared/widgets/loading_button.dart';
 import 'package:subscription_management/src/routes/router.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
+import 'package:subscription_management/src/utils/widgets/custom_snack_bar_widget.dart';
 
 @RoutePage(name: 'LoginPageRoute')
 class LoginPage extends StatefulWidget {
@@ -167,7 +168,10 @@ class _LoginPageState extends State<LoginPage> {
                     >(
                       listener: (context, state) async {
                         if (state.isFailure) {
-                          showActionSnackBarError(context);
+                          CustomSnackBar.showError(
+                            context,
+                            message: strings.wasNotPossibleToCreateAnAccount,
+                          );
                         } else if (state.isSuccess) {
                           final email = emailController.text;
                           String? userName;
@@ -217,20 +221,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  void showActionSnackBarError(BuildContext context) {
-    final snackBar = SnackBar(
-      content: Text(
-        strings.wasNotPossibleToCreateAnAccount,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
-      ),
-      backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

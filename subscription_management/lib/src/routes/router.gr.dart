@@ -11,22 +11,6 @@
 part of 'router.dart';
 
 /// generated route for
-/// [CostumizeStreamingPage]
-class CostumizeStreamingPageRoute extends PageRouteInfo<void> {
-  const CostumizeStreamingPageRoute({List<PageRouteInfo>? children})
-    : super(CostumizeStreamingPageRoute.name, initialChildren: children);
-
-  static const String name = 'CostumizeStreamingPageRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      return const CostumizeStreamingPage();
-    },
-  );
-}
-
-/// generated route for
 /// [HomePage]
 class HomePageRoute extends PageRouteInfo<HomePageRouteArgs> {
   HomePageRoute({

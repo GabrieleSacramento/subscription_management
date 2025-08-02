@@ -9,6 +9,7 @@ import 'package:subscription_management/src/modules/home/presentation/widgets/se
 import 'package:subscription_management/src/modules/login/presentation/cubit/user_authentication_cubit.dart';
 import 'package:subscription_management/src/routes/router.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
+import 'package:subscription_management/src/utils/widgets/custom_snack_bar_widget.dart';
 
 @RoutePage(name: 'HomePageRoute')
 class HomePage extends StatefulWidget {
@@ -59,7 +60,10 @@ class _HomePageState extends State<HomePage> {
               BlocListener<UserAuthenticationCubit, UserAuthenticationState>(
                 listener: (context, state) {
                   if (state.isFailure) {
-                    showActionSnackBar(context);
+                    CustomSnackBar.showError(
+                      context,
+                      message: strings.somethingWentWrong,
+                    );
                   }
                   if (state.isInitial) {
                     context.router.popUntilRoot();
@@ -134,15 +138,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
-
-void showActionSnackBar(BuildContext context) {
-  const snackBar = SnackBar(
-    content: Text(
-      'Algo deu errado, tente novamente!',
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-    ),
-    backgroundColor: Colors.redAccent,
-  );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }

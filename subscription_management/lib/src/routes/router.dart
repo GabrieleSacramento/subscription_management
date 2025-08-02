@@ -7,7 +7,6 @@ import 'package:subscription_management/src/modules/home/presentation/pages/home
 import 'package:subscription_management/src/modules/login/presentation/pages/select_login_method_page.dart';
 import 'package:subscription_management/src/modules/select_streaming/presentation/pages/select_streaming_page.dart';
 import 'package:subscription_management/src/modules/splash_screen/splash_screen.dart';
-import 'package:subscription_management/src/modules/streaming_management/presentation/pages/custumize_streaming_page.dart';
 
 part 'router.gr.dart';
 
@@ -23,6 +22,5 @@ class SubscriptionManagerRouter extends RootStackRouter {
     AutoRoute(page: HomePageRoute.page),
     AutoRoute(page: SelectStreamingPageRoute.page),
     AutoRoute(page: StreamingManagementPageRoute.page),
-    AutoRoute(page: CostumizeStreamingPageRoute.page),
   ];
 }
