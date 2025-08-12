@@ -3,147 +3,112 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/home_filled_body_widget.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/settings_body.dart';
+import 'package:subscription_management/src/modules/home/presentation/widgets/streaming_list_widget.dart';
 import 'package:subscription_management/src/modules/login/presentation/cubit/user_authentication_cubit.dart';
 import 'package:subscription_management/src/routes/router.dart';
 import 'package:subscription_management/src/utils/app_strings.dart';
 import 'package:subscription_management/src/utils/widgets/custom_snack_bar_widget.dart';
 
 @RoutePage(name: 'HomePageRoute')
-class HomePage extends StatefulWidget {
-  final String? userName;
-  final String? email;
-
-  const HomePage({super.key, this.userName, this.email});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final _logoutCubit = GetIt.I.get<UserAuthenticationCubit>();
-
-  final strings = SubscriptionsManagementStrings();
-  String? _userName;
-
-  @override
-  void initState() {
-    _loadUserName();
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant HomePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.email != oldWidget.email ||
-        widget.userName != oldWidget.userName) {
-      _loadUserName();
-    }
-  }
-
-  Future<void> _loadUserName() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    if (widget.userName != null) {
-      await prefs.setString('userName_${widget.email}', widget.userName!);
-      setState(() {
-        _userName = widget.userName;
-      });
-    } else {
-      final savedUserName = prefs.getString('userName_${widget.email}');
-      setState(() {
-        _userName = savedUserName;
-      });
-    }
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: BlocProvider(
-        create: (context) => _logoutCubit,
-        child: Scaffold(
-          endDrawer:
-              BlocListener<UserAuthenticationCubit, UserAuthenticationState>(
-                listener: (context, state) {
-                  if (state.isFailure) {
-                    CustomSnackBar.showError(
-                      context,
-                      message: strings.somethingWentWrong,
-                    );
-                  }
-                  if (state.isInitial) {
-                    context.router.popUntilRoot();
-                    context.router.push(SelectLoginMethodRoute());
-                  }
-                },
-                child: SettingsBody(
-                  userName: _userName,
+    final strings = SubscriptionsManagementStrings();
+    return BlocProvider(
+      create:
+          (context) =>
+              GetIt.I.get<UserAuthenticationCubit>()..checkAuthentication(),
+      child: BlocConsumer<UserAuthenticationCubit, UserAuthenticationState>(
+        listener: (context, state) {
+          state.when(
+            onFailure: (error) {
+              CustomSnackBar.showError(
+                context,
+                message: strings.somethingWentWrong,
+              );
+            },
+            onInitial: () {
+              if (context.router.canPop()) {
+                context.router.popUntilRoot();
+              }
+              context.router.replace(SelectLoginMethodRoute());
+            },
+            onLoading: () {},
+            onSuccess: (user) {},
+          );
+        },
+        builder: (context, state) {
+          return state.when(
+            onSuccess: (user) {
+              final userName = user.name;
+              return Scaffold(
+                endDrawer: SettingsBody(
+                  userName: userName,
                   onLogout: () {
-                    _logoutCubit.logout();
+                    context.read<UserAuthenticationCubit>().logout();
                   },
                 ),
-              ),
-          backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            titleSpacing: 24.w,
-            scrolledUnderElevation: 0.1,
-            title: Padding(
-              padding: EdgeInsets.only(top: 8.h),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _userName ?? strings.welcome,
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    color: const Color.fromRGBO(111, 86, 221, 1),
-                  ),
-                ),
-              ),
-            ),
-            actions: [
-              Builder(
-                builder:
-                    (context) => GestureDetector(
-                      onTap: () {
-                        Scaffold.of(context).openEndDrawer();
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 24.w, top: 8.h),
-                        child: const Icon(
-                          Icons.menu_rounded,
-                          color: Color.fromRGBO(111, 86, 221, 1),
-                        ),
+                backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  title: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      userName ?? strings.welcome,
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        color: const Color.fromRGBO(111, 86, 221, 1),
                       ),
                     ),
-              ),
-            ],
-
-            backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-            elevation: 0,
-          ),
-          body: const HomeFilledBodyWidget(),
-          floatingActionButton: SizedBox(
-            width: 60.w,
-            height: 60.h,
-            child: FloatingActionButton(
-              onPressed: () {
-                context.router.navigate(const SelectStreamingPageRoute());
-              },
-              backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
-              child: Icon(
-                Icons.add,
-                color: const Color.fromRGBO(243, 243, 243, 1),
-                size: 48.sp,
-              ),
-            ),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-        ),
+                  ),
+                  actions: [
+                    Builder(
+                      builder:
+                          (context) => IconButton(
+                            icon: const Icon(
+                              Icons.menu_rounded,
+                              color: Color.fromRGBO(111, 86, 221, 1),
+                            ),
+                            onPressed:
+                                () => Scaffold.of(context).openEndDrawer(),
+                          ),
+                    ),
+                  ],
+                  backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
+                  elevation: 0,
+                ),
+                body: const HomeFilledBodyWidget(),
+                floatingActionButton: FloatingActionButton(
+                  onPressed:
+                      () => context.router.navigate(
+                        const SelectStreamingPageRoute(),
+                      ),
+                  backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
+                  child: Icon(
+                    Icons.add,
+                    color: const Color.fromRGBO(243, 243, 243, 1),
+                    size: 48.sp,
+                  ),
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+              );
+            },
+            onLoading:
+                () => const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                ),
+            onInitial:
+                () => const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                ),
+            onFailure: (error) => Scaffold(body: StreamingsErrorWidget()),
+          );
+        },
       ),
     );
   }

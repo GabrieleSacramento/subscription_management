@@ -46,5 +46,6 @@
     "errorToCreateSubscription": "Erro ao adicionar assinatura, tente novamente mais tarde",
     "subscriptionCanceled": "Assinatura cancelada com sucesso",
     "subscriptionUpdated": "Assinatura atualizada com sucesso",
-    "subscriptionCreated": "Assinatura adicionada com sucesso"
+    "subscriptionCreated": "Assinatura adicionada com sucesso",
+    "unfortunatelySomethingWrongHappend": "Infelizmente algo deu errado, tente novamente mais tarde"
 }

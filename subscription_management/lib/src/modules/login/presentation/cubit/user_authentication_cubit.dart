@@ -5,9 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:subscription_management/src/modules/login/domain/entities/use_cases/user_authentication_use_case.dart';
 import 'package:subscription_management/src/modules/login/domain/entities/user_authentication_entity.dart';
 
-typedef UserAuthenticationState = Do<Exception, User>;
+typedef UserAuthenticationState = Do<Exception, UserAuthenticationEntity>;
 
-class UserAuthenticationCubit extends Cubit<Do<Exception, User>> {
+class UserAuthenticationCubit
+    extends Cubit<Do<Exception, UserAuthenticationEntity>> {
   final UserAuthenticationUseCase userAuthenticationUseCase;
   UserAuthenticationCubit({required this.userAuthenticationUseCase})
     : super(const Do.initial());
@@ -23,7 +24,14 @@ class UserAuthenticationCubit extends Cubit<Do<Exception, User>> {
       onSuccess: (user) async {
         String? token = await user.getIdToken();
         await sp.setString('token', '$token');
-        emit(Do.success(user));
+        if (userEntity.name != null) {
+          await sp.setString('userName_${user.email}', userEntity.name!);
+        }
+        final appUSer = UserAuthenticationEntity.fromFirebaseUser(
+          user,
+          name: userEntity.name,
+        );
+        emit(Do.success(appUSer));
       },
     );
   }
@@ -39,7 +47,13 @@ class UserAuthenticationCubit extends Cubit<Do<Exception, User>> {
       onSuccess: (user) async {
         String? token = await user.getIdToken();
         await sp.setString('token', '$token');
-        emit(Do.success(user));
+        final savedUserName = sp.getString('userName_${user.email}');
+
+        final appUser = UserAuthenticationEntity.fromFirebaseUser(
+          user,
+          name: savedUserName,
+        );
+        emit(Do.success(appUser));
       },
     );
   }
@@ -57,7 +71,12 @@ class UserAuthenticationCubit extends Cubit<Do<Exception, User>> {
     if (token != null) {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        emit(Do.success(user));
+        final savedUserName = sp.getString('userName_${user.email}');
+        final appUser = UserAuthenticationEntity.fromFirebaseUser(
+          user,
+          name: savedUserName,
+        );
+        emit(Do.success(appUser));
       } else {
         emit(const Do.initial());
       }

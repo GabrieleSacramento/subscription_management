@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/home_empty_body_widget.dart';
 import 'package:subscription_management/src/modules/home/presentation/widgets/streaming_item_widget.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/cubit/streaming_management_cubit.dart';
+import 'package:subscription_management/src/utils/app_strings.dart';
 
 class StreamingListWidget extends StatelessWidget {
   final StreamingManagementState state;
@@ -13,7 +14,7 @@ class StreamingListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return state.when(
       onLoading: () => const StreamingsLoadingWidget(),
-      onFailure: (error) => StreamingsErrorWidget(error: error.toString()),
+      onFailure: (error) => StreamingsErrorWidget(),
       onSuccess: (streamings) {
         if (streamings.isEmpty) {
           return Padding(
@@ -53,16 +54,16 @@ class StreamingsLoadingWidget extends StatelessWidget {
 }
 
 class StreamingsErrorWidget extends StatelessWidget {
-  final String error;
+  final strings = SubscriptionsManagementStrings();
 
-  const StreamingsErrorWidget({super.key, required this.error});
+  StreamingsErrorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        'Erro: $error',
-        style: TextStyle(fontSize: 14.sp, color: Colors.red),
+        strings.unfortunatelySomethingWrongHappend,
+        style: TextStyle(fontSize: 14.sp, color: Colors.grey),
       ),
     );
   }

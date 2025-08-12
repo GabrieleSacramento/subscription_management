@@ -52,4 +52,5 @@ class SubscriptionsManagementStrings {
   final String subscriptionCanceled = 'Assinatura cancelada com sucesso';
   final String subscriptionUpdated = 'Assinatura atualizada com sucesso';
   final String subscriptionCreated = 'Assinatura adicionada com sucesso';
+  final String unfortunatelySomethingWrongHappend = 'Infelizmente algo deu errado, tente novamente mais tarde';
 }

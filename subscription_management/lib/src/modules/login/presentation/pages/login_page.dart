@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart' as validator;
 import 'package:subscription_management/src/modules/login/domain/entities/user_authentication_entity.dart';
 import 'package:subscription_management/src/modules/login/presentation/cubit/user_authentication_cubit.dart';
@@ -34,18 +33,8 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isPasswordVisible = false;
 
-  _navigateToHomePage(String? userName, String? email) {
-    context.replaceRoute(HomePageRoute(userName: userName));
-  }
-
-  Future<String?> _getUserName(String email) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userName_$email');
-  }
-
-  Future<void> _saveUserName(String email, String userName) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userName_$email', userName);
+  _navigateToHomePage(String? email) {
+    context.replaceRoute(const HomePageRoute());
   }
 
   @override
@@ -178,16 +167,8 @@ class _LoginPageState extends State<LoginPage> {
                           );
                         } else if (state.isSuccess) {
                           final email = emailController.text;
-                          String? userName;
 
-                          if (widget.isFromSignUp) {
-                            userName = nameController.text;
-                            await _saveUserName(email, userName);
-                          } else {
-                            userName = await _getUserName(email);
-                          }
-
-                          _navigateToHomePage(userName, email);
+                          _navigateToHomePage(email);
                           clearForm();
                         }
                       },

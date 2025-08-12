@@ -12,48 +12,18 @@ part of 'router.dart';
 
 /// generated route for
 /// [HomePage]
-class HomePageRoute extends PageRouteInfo<HomePageRouteArgs> {
-  HomePageRoute({
-    Key? key,
-    String? userName,
-    String? email,
-    List<PageRouteInfo>? children,
-  }) : super(
-         HomePageRoute.name,
-         args: HomePageRouteArgs(key: key, userName: userName, email: email),
-         initialChildren: children,
-       );
+class HomePageRoute extends PageRouteInfo<void> {
+  const HomePageRoute({List<PageRouteInfo>? children})
+    : super(HomePageRoute.name, initialChildren: children);
 
   static const String name = 'HomePageRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<HomePageRouteArgs>(
-        orElse: () => const HomePageRouteArgs(),
-      );
-      return HomePage(
-        key: args.key,
-        userName: args.userName,
-        email: args.email,
-      );
+      return const HomePage();
     },
   );
-}
-
-class HomePageRouteArgs {
-  const HomePageRouteArgs({this.key, this.userName, this.email});
-
-  final Key? key;
-
-  final String? userName;
-
-  final String? email;
-
-  @override
-  String toString() {
-    return 'HomePageRouteArgs{key: $key, userName: $userName, email: $email}';
-  }
 }
 
 /// generated route for
