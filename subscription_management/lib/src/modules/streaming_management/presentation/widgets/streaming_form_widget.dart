@@ -25,11 +25,13 @@ class StreamingFormWidget extends StatelessWidget {
     return Column(
       children: [
         CustomForm(
+          semanticLabel: strings.name,
           hintText: strings.name,
           isPrefixHint: true,
           controller: controller.nameController,
         ),
         CustomForm(
+          semanticLabel: strings.value,
           hintText: strings.value,
           isPrefixHint: true,
           controller: controller.valueController,
@@ -37,6 +39,7 @@ class StreamingFormWidget extends StatelessWidget {
           keyboardType: TextInputType.number,
         ),
         CustomForm(
+          semanticLabel: strings.startsAt,
           hintText: strings.startsAt,
           isPrefixHint: true,
           suffixIcon: const Icon(Icons.calendar_month),
@@ -47,6 +50,7 @@ class StreamingFormWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: 16.h),
           child: CustomForm(
+            semanticLabel: strings.renewAt,
             hintText: strings.renewAt,
             isPrefixHint: true,
             suffixIcon: const Icon(Icons.calendar_month),

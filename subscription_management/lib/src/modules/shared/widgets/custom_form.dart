@@ -18,6 +18,7 @@ class CustomForm extends StatelessWidget {
   final Function()? onTap;
   final bool isPrefixHint;
   final TextInputType? keyboardType;
+  final String? semanticLabel;
 
   CustomForm({
     super.key,
@@ -33,6 +34,7 @@ class CustomForm extends StatelessWidget {
     this.isPrefixHint = false,
     this.keyboardType,
     this.onTap,
+    this.semanticLabel,
   });
 
   @override
@@ -61,73 +63,76 @@ class CustomForm extends StatelessWidget {
             ),
           ],
         ),
-        TextFormField(
-          keyboardType: isDatePicker ? TextInputType.none : keyboardType,
-          inputFormatters: [
-            if (keyboardType == TextInputType.number)
-              FilteringTextInputFormatter.digitsOnly,
-          ],
-          obscureText: obscurePassword ?? false,
-          controller: controller,
-          validator: validator,
-          onChanged: onChanged,
-          readOnly: isDatePicker,
-          onTap: onTap,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            hintText: isPrefixHint ? null : hintText,
-            prefixIcon:
-                isPrefixHint && hintText != null
-                    ? Padding(
-                      padding: EdgeInsets.only(left: 15.h, right: 8.h),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '$hintText: ',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14.h,
+        Semantics(
+          label: semanticLabel,
+          child: TextFormField(
+            keyboardType: isDatePicker ? TextInputType.none : keyboardType,
+            inputFormatters: [
+              if (keyboardType == TextInputType.number)
+                FilteringTextInputFormatter.digitsOnly,
+            ],
+            obscureText: obscurePassword ?? false,
+            controller: controller,
+            validator: validator,
+            onChanged: onChanged,
+            readOnly: isDatePicker,
+            onTap: onTap,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: isPrefixHint ? null : hintText,
+              prefixIcon:
+                  isPrefixHint && hintText != null
+                      ? Padding(
+                        padding: EdgeInsets.only(left: 15.h, right: 8.h),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '$hintText: ',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14.h,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                    : null,
-            contentPadding: EdgeInsets.symmetric(horizontal: 15.h),
-            suffixIcon: suffixIcon,
-            suffixIconColor: const Color.fromRGBO(111, 86, 221, 1),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(
-                width: 1.w,
-                color: const Color.fromRGBO(111, 86, 221, 1),
+                          ],
+                        ),
+                      )
+                      : null,
+              contentPadding: EdgeInsets.symmetric(horizontal: 15.h),
+              suffixIcon: suffixIcon,
+              suffixIconColor: const Color.fromRGBO(111, 86, 221, 1),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide(
+                  width: 1.w,
+                  color: const Color.fromRGBO(111, 86, 221, 1),
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(width: 1, color: Colors.redAccent),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide(width: 1.w, color: Colors.redAccent),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 1.w,
+                  color: const Color.fromRGBO(37, 41, 84, 0.15),
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              labelStyle: TextStyle(
+                fontSize: 16.h,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
               ),
             ),
-            errorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(width: 1, color: Colors.redAccent),
-              borderRadius: BorderRadius.circular(10),
+            style: const TextStyle(
+              color: Color.fromRGBO(111, 86, 221, 1), // Cor roxa para datas
             ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(width: 1.w, color: Colors.redAccent),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 1.w,
-                color: const Color.fromRGBO(37, 41, 84, 0.15),
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            labelStyle: TextStyle(
-              fontSize: 16.h,
-              fontWeight: FontWeight.w400,
-              color: Colors.black,
-            ),
-          ),
-          style: const TextStyle(
-            color: Color.fromRGBO(111, 86, 221, 1), // Cor roxa para datas
           ),
         ),
       ],

@@ -22,8 +22,11 @@ class LoadingButton extends StatelessWidget {
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
         ),
       ),
-      child: const CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4.h),
+        child: const CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        ),
       ),
     );
   }

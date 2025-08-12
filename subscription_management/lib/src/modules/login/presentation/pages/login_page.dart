@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   bool isPasswordVisible = false;
 
   _navigateToHomePage(String? userName, String? email) {
-    context.pushRoute(HomePageRoute(userName: userName));
+    context.replaceRoute(HomePageRoute(userName: userName));
   }
 
   Future<String?> _getUserName(String email) async {
@@ -99,10 +99,12 @@ class _LoginPageState extends State<LoginPage> {
                               ? Padding(
                                 padding: EdgeInsets.only(bottom: 16.h),
                                 child: CustomForm(
+                                  semanticLabel: strings.name,
                                   isMandatory: true,
                                   hintText: strings.name,
                                   controller: nameController,
                                   label: strings.name,
+
                                   validator: (text) {
                                     if (text == null || text.isEmpty) {
                                       return strings.thisFieldIsRequired;
@@ -113,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                               )
                               : const SizedBox.shrink(),
                           CustomForm(
+                            semanticLabel: strings.email,
                             isMandatory: true,
                             controller: emailController,
                             hintText: 'Email',
@@ -130,6 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                           Padding(
                             padding: EdgeInsets.only(top: 16.h, bottom: 24.h),
                             child: CustomForm(
+                              semanticLabel: strings.password,
                               isMandatory: true,
                               obscurePassword: isPasswordVisible,
                               hintText: strings.password,

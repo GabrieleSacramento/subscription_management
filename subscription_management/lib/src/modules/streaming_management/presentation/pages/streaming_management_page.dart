@@ -51,6 +51,7 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
   @override
   void dispose() {
     _formController.dispose();
+    _streamingCubit.close();
     super.dispose();
   }
 

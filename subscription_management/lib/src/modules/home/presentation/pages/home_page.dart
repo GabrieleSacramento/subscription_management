@@ -34,6 +34,15 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(covariant HomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.email != oldWidget.email ||
+        widget.userName != oldWidget.userName) {
+      _loadUserName();
+    }
+  }
+
   Future<void> _loadUserName() async {
     final prefs = await SharedPreferences.getInstance();
 

@@ -149,6 +149,7 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
                           onPressed: () {},
                         ),
                         hintText: strings.searchStreaming,
+                        semanticLabel: strings.searchStreaming,
                       ),
                     ),
 
@@ -175,6 +176,7 @@ class _SelectStreamingPageState extends State<SelectStreamingPage> {
                       onPressed: () {},
                     ),
                     hintText: strings.searchStreaming,
+                    semanticLabel: strings.searchStreaming,
                   ),
 
                   Expanded(
