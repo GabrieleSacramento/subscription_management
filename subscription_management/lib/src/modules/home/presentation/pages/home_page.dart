@@ -43,57 +43,59 @@ class HomePage extends StatelessWidget {
           return state.when(
             onSuccess: (user) {
               final userName = user.name;
-              return Scaffold(
-                endDrawer: SettingsBody(
-                  userName: userName,
-                  onLogout: () {
-                    context.read<UserAuthenticationCubit>().logout();
-                  },
-                ),
-                backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  title: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      userName ?? strings.welcome,
-                      style: TextStyle(
-                        fontSize: 20.sp,
-                        color: const Color.fromRGBO(111, 86, 221, 1),
-                      ),
-                    ),
+              return SafeArea(
+                child: Scaffold(
+                  endDrawer: SettingsBody(
+                    userName: userName,
+                    onLogout: () {
+                      context.read<UserAuthenticationCubit>().logout();
+                    },
                   ),
-                  actions: [
-                    Builder(
-                      builder:
-                          (context) => IconButton(
-                            icon: const Icon(
-                              Icons.menu_rounded,
-                              color: Color.fromRGBO(111, 86, 221, 1),
-                            ),
-                            onPressed:
-                                () => Scaffold.of(context).openEndDrawer(),
-                          ),
-                    ),
-                  ],
                   backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
-                  elevation: 0,
-                ),
-                body: const HomeFilledBodyWidget(),
-                floatingActionButton: FloatingActionButton(
-                  onPressed:
-                      () => context.router.navigate(
-                        const SelectStreamingPageRoute(),
+                  appBar: AppBar(
+                    automaticallyImplyLeading: false,
+                    title: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        userName ?? strings.welcome,
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          color: const Color.fromRGBO(111, 86, 221, 1),
+                        ),
                       ),
-                  backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
-                  child: Icon(
-                    Icons.add,
-                    color: const Color.fromRGBO(243, 243, 243, 1),
-                    size: 48.sp,
+                    ),
+                    actions: [
+                      Builder(
+                        builder:
+                            (context) => IconButton(
+                              icon: const Icon(
+                                Icons.menu_rounded,
+                                color: Color.fromRGBO(111, 86, 221, 1),
+                              ),
+                              onPressed:
+                                  () => Scaffold.of(context).openEndDrawer(),
+                            ),
+                      ),
+                    ],
+                    backgroundColor: const Color.fromRGBO(243, 243, 243, 1),
+                    elevation: 0,
                   ),
+                  body: const HomeFilledBodyWidget(),
+                  floatingActionButton: FloatingActionButton(
+                    onPressed:
+                        () => context.router.navigate(
+                          const SelectStreamingPageRoute(),
+                        ),
+                    backgroundColor: const Color.fromRGBO(111, 86, 221, 1),
+                    child: Icon(
+                      Icons.add,
+                      color: const Color.fromRGBO(243, 243, 243, 1),
+                      size: 48.sp,
+                    ),
+                  ),
+                  floatingActionButtonLocation:
+                      FloatingActionButtonLocation.centerFloat,
                 ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerFloat,
               );
             },
             onLoading:

@@ -97,10 +97,12 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: _backgroundColor,
-        appBar: _buildAppBar(),
-        body: _buildBody(),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: _backgroundColor,
+          appBar: _buildAppBar(),
+          body: _buildBody(),
+        ),
       ),
     );
   }
