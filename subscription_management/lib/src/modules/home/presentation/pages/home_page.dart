@@ -18,10 +18,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final strings = SubscriptionsManagementStrings();
-    return BlocProvider(
-      create:
-          (context) =>
-              GetIt.I.get<UserAuthenticationCubit>()..checkAuthentication(),
+    return BlocProvider.value(
+      value: GetIt.I.get<UserAuthenticationCubit>()..checkAuthentication(),
       child: BlocConsumer<UserAuthenticationCubit, UserAuthenticationState>(
         listener: (context, state) {
           state.when(

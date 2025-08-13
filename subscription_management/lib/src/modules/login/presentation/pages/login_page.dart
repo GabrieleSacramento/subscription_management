@@ -29,12 +29,28 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final strings = SubscriptionsManagementStrings();
-  final _loginCubit = GetIt.I.get<UserAuthenticationCubit>();
 
   bool isPasswordVisible = false;
 
   _navigateToHomePage(String? email) {
     context.replaceRoute(const HomePageRoute());
+  }
+
+  void _handleLogin(BuildContext context) {
+    if (_formKey.currentState?.validate() ?? false) {
+      final cubit = context.read<UserAuthenticationCubit>();
+      final entity = UserAuthenticationEntity(
+        email: emailController.text,
+        password: passwordController.text,
+        name: widget.isFromSignUp ? nameController.text : null,
+      );
+
+      if (widget.isFromSignUp) {
+        cubit.signup(entity);
+      } else {
+        cubit.signIn(entity);
+      }
+    }
   }
 
   @override
@@ -54,8 +70,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _loginCubit,
+    return BlocProvider.value(
+      value: GetIt.I.get<UserAuthenticationCubit>(),
       child: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -177,23 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                             ? const LoadingButton(isLarge: true)
                             : CustomButton(
                               textButton: strings.enter,
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  widget.isFromSignUp
-                                      ? _loginCubit.signup(
-                                        UserAuthenticationEntity(
-                                          email: emailController.text,
-                                          password: passwordController.text,
-                                        ),
-                                      )
-                                      : _loginCubit.signIn(
-                                        UserAuthenticationEntity(
-                                          email: emailController.text,
-                                          password: passwordController.text,
-                                        ),
-                                      );
-                                }
-                              },
+                              onPressed: () => _handleLogin(context),
                               isLarge: true,
                             );
                       },

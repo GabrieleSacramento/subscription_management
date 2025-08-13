@@ -24,7 +24,7 @@ class UserAuthenticationCubit
       onSuccess: (user) async {
         String? token = await user.getIdToken();
         await sp.setString('token', '$token');
-        if (userEntity.name != null) {
+        if (userEntity.name != null && userEntity.name!.isNotEmpty) {
           await sp.setString('userName_${user.email}', userEntity.name!);
         }
         final appUSer = UserAuthenticationEntity.fromFirebaseUser(
