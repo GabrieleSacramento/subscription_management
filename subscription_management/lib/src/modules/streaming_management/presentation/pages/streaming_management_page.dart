@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:subscription_management/src/modules/shared/widgets/loading_button.dart';
 import 'package:subscription_management/src/modules/streaming_management/domain/entities/streaming_entity.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/cubit/streaming_management_cubit.dart';
+import 'package:subscription_management/src/modules/streaming_management/presentation/widgets/cancel_subscription_modal_content.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/widgets/streaming_form_controller.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/widgets/streaming_form_widget.dart';
 import 'package:subscription_management/src/modules/streaming_management/presentation/widgets/streaming_header_widget.dart';
@@ -212,7 +213,7 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
         successMessage = strings.subscriptionUpdated;
       }
       CustomSnackBar.showSuccess(context, message: successMessage);
-      context.pushRoute(HomePageRoute());
+      context.pushRoute(const HomePageRoute());
     }
   }
 
@@ -259,7 +260,13 @@ class _StreamingManagementPageState extends State<StreamingManagementPage> {
               : CustomButton(
                 isLarge: true,
                 textButton: strings.cancelSubscription,
-                onPressed: _onDeletePressed,
+                onPressed: () {
+                  CancelSubscriptionModalContent.show(
+                    context,
+                    streamingName: widget.streaming.streamingName,
+                    onConfirm: () => _onDeletePressed(),
+                  );
+                },
                 buttonColor: _deleteColor,
               );
         },

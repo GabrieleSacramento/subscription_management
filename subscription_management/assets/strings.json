@@ -47,5 +47,8 @@
     "subscriptionCanceled": "Assinatura cancelada com sucesso",
     "subscriptionUpdated": "Assinatura atualizada com sucesso",
     "subscriptionCreated": "Assinatura adicionada com sucesso",
-    "unfortunatelySomethingWrongHappend": "Infelizmente algo deu errado, tente novamente mais tarde"
+    "unfortunatelySomethingWrongHappend": "Infelizmente algo deu errado, tente novamente mais tarde",
+    "areYouSureYouWantToCancel": "Você tem certeza que deseja remover a assinatura de \"{p1}\"? Esta ação não pode ser desfeita.\\n\\nRemover a assinatura não significa que ela deixará de ser cobrada pelo streaming utilizado.",
+    "back": "Voltar",
+    "wantCancelSubscription": "Deseja remover a assinatura?"
 }

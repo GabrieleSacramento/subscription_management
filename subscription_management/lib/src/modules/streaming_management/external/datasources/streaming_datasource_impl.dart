@@ -9,10 +9,17 @@ class StreamingDataSourceImpl implements StreamingDataSource {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   StreamingDataSourceImpl({required this.firestore});
+  String _getUserId() {
+    final user = auth.currentUser;
+    if (user == null) {
+      throw Exception('Usuário não autenticado. Acesso negado.');
+    }
+    return user.uid;
+  }
 
   @override
   Future<void> addStreaming(StreamingEntity streaming) async {
-    final userId = auth.currentUser?.uid;
+    final userId = _getUserId();
     final streamingModel = StreamingModel.fromEntity(streaming);
     await firestore
         .collection("streaming")
@@ -23,31 +30,35 @@ class StreamingDataSourceImpl implements StreamingDataSource {
 
   @override
   Stream<List<StreamingEntity>> getStreaming() {
-    final userId = auth.currentUser?.uid;
-    return firestore
-        .collection("streaming")
-        .doc(userId)
-        .collection("list")
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
-              .map((doc) {
-                try {
-                  final data = doc.data();
-                  data['streamingId'] = doc.id;
-                  return StreamingModel.fromJson(data).toEntity();
-                } catch (e) {
-                  return null;
-                }
-              })
-              .whereType<StreamingEntity>()
-              .toList();
-        });
+    try {
+      final userId = _getUserId();
+      return firestore
+          .collection("streaming")
+          .doc(userId)
+          .collection("list")
+          .snapshots()
+          .map((snapshot) {
+            return snapshot.docs
+                .map((doc) {
+                  try {
+                    final data = doc.data();
+                    data['streamingId'] = doc.id;
+                    return StreamingModel.fromJson(data).toEntity();
+                  } catch (e) {
+                    return null;
+                  }
+                })
+                .whereType<StreamingEntity>()
+                .toList();
+          });
+    } catch (e) {
+      return Stream.error(e);
+    }
   }
 
   @override
   Future<void> updateStreaming(StreamingEntity streaming) async {
-    final userId = auth.currentUser?.uid;
+    final userId = _getUserId();
     if (streaming.streamingId == null || streaming.streamingId!.isEmpty) {
       throw Exception('ID do streaming é obrigatório para atualização');
     }
@@ -67,7 +78,7 @@ class StreamingDataSourceImpl implements StreamingDataSource {
 
   @override
   Future<void> deleteStreaming(String streamingId) async {
-    final userId = auth.currentUser?.uid;
+    final userId = _getUserId();
     await firestore
         .collection("streaming")
         .doc(userId)

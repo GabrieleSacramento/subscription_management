@@ -53,4 +53,7 @@ class SubscriptionsManagementStrings {
   final String subscriptionUpdated = 'Assinatura atualizada com sucesso';
   final String subscriptionCreated = 'Assinatura adicionada com sucesso';
   final String unfortunatelySomethingWrongHappend = 'Infelizmente algo deu errado, tente novamente mais tarde';
+  final String areYouSureYouWantToCancel = 'Você tem certeza que deseja remover a assinatura de "{p1}"? Esta ação não pode ser desfeita.\n\nRemover a assinatura não significa que ela deixará de ser cobrada pelo streaming utilizado.';
+  final String back = 'Voltar';
+  final String wantCancelSubscription = 'Deseja remover a assinatura?';
 }
