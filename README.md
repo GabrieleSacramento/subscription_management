@@ -127,7 +127,43 @@ flutter run
 
 ---
 
+## 🤝 Overview
 
+### Cadastro
+
+https://github.com/user-attachments/assets/2f8765ff-90bb-466f-bdcc-267b922af447
+
+### Login
+
+https://github.com/user-attachments/assets/67bcdde1-fa41-4b73-a169-7c47c65fa6de
+
+### Adiciona assinatura
+
+https://github.com/user-attachments/assets/8c62c27c-3721-4cff-98f5-dda4fd257d27
+
+### Multiplas assinaturas
+
+https://github.com/user-attachments/assets/c26aba1e-6783-4c5a-b03f-eb24829b03d8
+
+### Atualiza assinatura
+
+https://github.com/user-attachments/assets/cdf51f65-1a04-44ea-9140-d7f0add518a4
+
+### Remove assinatura
+
+https://github.com/user-attachments/assets/0ef454f4-55b3-4a3b-822f-3c1f7d8467ab
+
+### Personaliza assinatura
+
+https://github.com/user-attachments/assets/724ff1c7-7efa-4f6f-b691-3a1bda52a179
+
+### filtra assinatura
+
+https://github.com/user-attachments/assets/c2feaa6a-b7ad-46db-9b94-3a1df129eb38
+
+### Logout
+
+https://github.com/user-attachments/assets/16e2510b-2749-4be5-a4d4-c7408c9e412b
 
 ## 🤝 Contribuição
 
